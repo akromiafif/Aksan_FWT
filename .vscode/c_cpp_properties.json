@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/akromiafif/Aksan_Dev/catkin_tubitak/devel/include/**",
+        "/home/akromiafif/Aksan_Dev/catkin_iq/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/akromiafif/Aksan_Dev/catkin_tubitak/src/cv_basics/include/**",
+        "/home/akromiafif/Aksan_Dev/catkin_iq/src/darknet_ros/darknet_ros/include/**",
+        "/home/akromiafif/Aksan_Dev/catkin_tubitak/src/env_percept/include/**",
+        "/home/akromiafif/Aksan_Dev/catkin_iq/src/iq_gnc/include/**",
+        "/home/akromiafif/Aksan_Dev/catkin_iq/src/mavros/libmavconn/include/**",
+        "/home/akromiafif/Aksan_Dev/catkin_iq/src/mavros/mavros/include/**",
+        "/home/akromiafif/Aksan_Dev/catkin_iq/src/mavros/mavros_msgs/include/**",
+        "/home/akromiafif/Aksan_Dev/catkin_iq/src/mavros/test_mavros/include/**",
+        "/home/akromiafif/Aksan_Dev/catkin_tubitak/src/uav_command/include/**",
+        "/home/akromiafif/Aksan_Dev/catkin_gana_raksaka/src/uav_commander/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}
