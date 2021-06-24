@@ -5,6 +5,12 @@
     name="img_capture"
     output="screen"
   />
+  <node
+    pkg="uav_percept"
+    type="main"
+    name="main"
+    output="screen"
+  />
   <!-- <node
     pkg="uav_percept"
     type="img_proc"

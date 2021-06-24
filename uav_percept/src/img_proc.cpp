@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
   cv::namedWindow("Vision Output", WINDOW_AUTOSIZE); //Create viewable window - Image overlay output
   cv::startWindowThread(); //Begin window view and image display
   image_transport::ImageTransport it(nh); //Define source of image
-  image_transport::Subscriber sub = it.subscribe("webcam/image_raw", 1, imageCallback); //Image subscriber
+  image_transport::Subscriber sub = it.subscribe("camera/image", 1, imageCallback); //Image subscriber
   
   //image_transport::Subscriber sub = it.subscribe("camera/image", 1, imageCallback);
   ros::spin();

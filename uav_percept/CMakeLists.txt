@@ -121,7 +121,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
 )
@@ -216,3 +216,6 @@ target_link_libraries(img_capture ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 add_executable(img_proc src/img_proc.cpp)
 target_link_libraries(img_proc ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+add_executable(main src/main.cpp)
+target_link_libraries(main ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
