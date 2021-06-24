@@ -25,35 +25,43 @@
 #include <mavros_msgs/WaypointSetCurrent.h> //Define a waypoint for the aircraft to fly to (Provide index)
 
 
+
+
 namespace uav_commander {
   class UAVCommander {
     public:
       ros::Publisher localPosPublisher;
       ros::Subscriber stateSubscriber;
       ros::Subscriber waypointReachSubscriber;
+      ros::Subscriber vfrSubscriber;
       
       ros::ServiceClient armingClient;
       ros::ServiceClient landClient;
       ros::ServiceClient setModeClient;
       ros::ServiceClient takeoffClient;
       ros::ServiceClient commandClient;
+      ros::ServiceClient waypointClearClient;
 
       mavros_msgs::State currStateGlobal;
-      nav_msgs::Odometry currPoseGlobal;
       mavros_msgs::WaypointReached WayReached;
+      mavros_msgs::VFR_HUD vfrHUD;
+      nav_msgs::Odometry currPoseGlobal;
 
     public:
       UAVCommander(ros::NodeHandle node);
       ~UAVCommander();
-      void setTakeOff(int takeoffAlt);
-      void setAutoLandMode(std::string mode);
       void setArm();
-      void loadMission();
       void setAutoMissionMode();
+      
+      // void setTakeOff(int takeoffAlt);
+      // void setAutoLandMode(std::string mode);
+      // void loadMission();
+
 
       // Callback function
       void stateCB(const mavros_msgs::State::ConstPtr& msg);
       void waypointReachedCB(const mavros_msgs::WaypointReached::ConstPtr& msg);
+      void vfrCB(const mavros_msgs::VFR_HUD::ConstPtr& msg);
 
       void infoWayReached();
   };
