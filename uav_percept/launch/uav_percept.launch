@@ -1,32 +1,14 @@
 <launch>
   <node
     pkg="uav_percept"
-<<<<<<< HEAD
     type="uav_capture"
     name="uav_capture"
-=======
-    type="img_capture"
-    name="img_capture"
->>>>>>> 5b0cee07ea702c1a955299c9c352e1b50de58761
     output="screen"
   />
   <node
     pkg="uav_percept"
-<<<<<<< HEAD
     type="main_percept"
     name="main_percept"
     output="screen"
   />
-=======
-    type="main"
-    name="main"
-    output="screen"
-  />
-  <!-- <node
-    pkg="uav_percept"
-    type="img_proc"
-    name="img_proc"
-    output="screen"
-  /> -->
->>>>>>> 5b0cee07ea702c1a955299c9c352e1b50de58761
 </launch> 
