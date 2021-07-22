@@ -214,5 +214,8 @@ include_directories(
 add_executable(uav_capture src/uav_capture.cpp)
 target_link_libraries(uav_capture ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
+add_executable(uav_default src/uav_default.cpp)
+target_link_libraries(uav_default ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
 add_executable(main_percept src/main_percept.cpp)
 target_link_libraries(main_percept ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})

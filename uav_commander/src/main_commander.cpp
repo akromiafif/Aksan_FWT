@@ -15,6 +15,5 @@ int main(int argc, char** argv) {
 	uavCommander.infoWayReached();
 
 	ros::spin();
-
 	return 0;
 }
