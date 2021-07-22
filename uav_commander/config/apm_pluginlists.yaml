@@ -1,0 +1,20 @@
+plugin_blacklist:
+# common
+- 3dr_radio
+- ftp
+- vfr_hud
+- waypoint
+- hil # gatau ini apaan
+# extras
+#- debug_value # gatau ini apaan
+- cam_imu_sync
+- image_pub
+- mocap_pose_estimate
+- px4flow
+- vibration
+- vision_pose_estimate
+- vision_speed_estimate
+- wheel_odometry
+
+plugin_whitelist: 
+- 'sys_*'

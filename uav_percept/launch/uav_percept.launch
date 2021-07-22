@@ -7,8 +7,8 @@
   />
   <node
     pkg="uav_percept"
-    type="main"
-    name="main"
+    type="main_percept"
+    name="main_percept"
     output="screen"
   />
 </launch> 

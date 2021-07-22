@@ -1,0 +1,26 @@
+# --- uav_missions ---
+
+# failsafeLand method
+# Options : setpoint_velocity, land_service, land_mode
+failsafeLand_method: "land_mode"
+
+# indoorInitialize options
+indoorInitialize_opt:
+  inject_ekf_origin: true
+  guided_mode: true
+  wait_keypress: true
+
+# indoorGoToCoord movement method
+# Options : setpoint_position, setpoint_velocity
+indoorGoToCoord_method: "setpoint_velocity"
+
+# --- uav_missions_utils ---
+
+# For getting altitude data
+# Options : rangefinder, ekf
+alt_data: "rangefinder"
+
+# Failsafe checks
+failsafe_checks:
+  altitude_check: true
+  rc_check: false
