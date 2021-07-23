@@ -10,9 +10,10 @@ namespace uav_commander {
   UAVCommander::UAVCommander(ros::NodeHandle node) {
     //Publishers (Transmits information to FCU)
     localPosPublisher = node.advertise<geometry_msgs::PoseStamped>("/mavros/setpoint_position/local", 10);
+
     stateSubscriber = node.subscribe<mavros_msgs::State>("/mavros/state", 10, &UAVCommander::stateCB, this);
-    waypointReachSubscriber = node.subscribe<mavros_msgs::WaypointReached>("mavros/mission/reached", 10, &UAVCommander::waypointReachedCB, this); // Listens for whether the aircraft reached the desired waypoint
-    vfrSubscriber = node.subscribe<mavros_msgs::VFR_HUD>("mavros/vfr_hud", 10, &UAVCommander::vfrCB, this); //Listens for aircraft variables
+    waypointReachSubscriber = node.subscribe<mavros_msgs::WaypointReached>("/mavros/mission/reached", 10, &UAVCommander::waypointReachedCB, this); // Listens for whether the aircraft reached the desired waypoint
+    vfrSubscriber = node.subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 10, &UAVCommander::vfrCB, this); //Listens for aircraft variables
 
     //Services and Clients (Allows for functions to be defined and called, returning a booleean result as to the clients success at executing the service
     //Two members: request and response
@@ -21,6 +22,8 @@ namespace uav_commander {
     setModeClient = node.serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
     takeoffClient = node.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
     commandClient = node.serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
+
+    ROS_INFO("UAVCommander Initialized");
   }
 
   UAVCommander::~UAVCommander(){}
@@ -56,6 +59,10 @@ namespace uav_commander {
       ROS_INFO("Arming failed with %d", arm_request.response.success);
     }
     ROS_INFO(" ===== Arming Completed ===== ");
+
+    ros::Rate rate(20.0);
+    ros::spinOnce();
+    rate.sleep();
   }
 
   void UAVCommander::setAutoMissionMode() {
@@ -71,6 +78,11 @@ namespace uav_commander {
       ROS_ERROR("Failed SetMode to Auto Mission Mode");
     }
     ROS_INFO(" ===== Auto Mission Completed ===== ");
+
+      
+    ros::Rate rate(20.0);
+    ros::spinOnce();
+    rate.sleep();
   }
 
   void UAVCommander::infoWayReached() {
@@ -78,6 +90,9 @@ namespace uav_commander {
     ros::Rate rate(20.0); //rate defines the frequency (rate is an attribute of the ROS::Rate topic)
     
     while (ros::ok) {
+      ROS_INFO("alt: %f", vfrHUD.altitude);
+      ROS_INFO("heading: %d", vfrHUD.heading);
+      ROS_INFO("WP: reached %d", WayReached.wp_seq);
       if (WayReached.wp_seq == 1) {
         ROS_INFO("alt: %f", vfrHUD.altitude);
         ROS_INFO("heading: %d", vfrHUD.heading);

@@ -5,6 +5,7 @@
       "includePath": [
         "${workspaceFolder}/**",
         "/opt/ros/noetic/include/**",
+        "~/Desktop/Aksan/catkin_fwt/devel/include/**",
         "/usr/include/**"
       ],
       "defines": [],
