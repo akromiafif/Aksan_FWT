@@ -86,13 +86,7 @@ namespace uav_commander {
   }
 
   void UAVCommander::infoWayReached() {
-    //Communication Transmission Rate (>>2Hz)
-    ros::Rate rate(20.0); //rate defines the frequency (rate is an attribute of the ROS::Rate topic)
-    
     while (ros::ok) {
-      ROS_INFO("alt: %f", vfrHUD.altitude);
-      ROS_INFO("heading: %d", vfrHUD.heading);
-      ROS_INFO("WP: reached %d", WayReached.wp_seq);
       if (WayReached.wp_seq == 1) {
         ROS_INFO("alt: %f", vfrHUD.altitude);
         ROS_INFO("heading: %d", vfrHUD.heading);
@@ -101,6 +95,7 @@ namespace uav_commander {
         ROS_INFO("WP: reached %d", WayReached.wp_seq);
       }
 
+      ros::Rate rate(20.0);
       ros::spinOnce();
       rate.sleep();
     }

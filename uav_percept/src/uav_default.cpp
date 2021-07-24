@@ -27,8 +27,8 @@ using namespace std;
 using namespace mavros_msgs;
 using namespace sensor_msgs;
 
-// Waypoint wp_target; //Drop-zone waypoint
-// Waypoint wp_hw; //Headwind determination waypoint
+Waypoint wp_target; //Drop-zone waypoint
+Waypoint wp_hw; //Headwind determination waypoint
 
 //Variables
 float BH = 0; //Drop-zone Bearing
@@ -69,20 +69,20 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg) {
     NodeHandle n;
 
     //VFR_HUD Subscriber
-    Subscriber vfr_sub = n.subscribe<mavros_msgs::VFR_HUD>("mavros/vfr_hud", 10, vfr_cb);
+    Subscriber vfr_sub = n.subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 10, vfr_cb);
     
-    // //GPS info Subscriber
-    // Subscriber nsf_sub = n.subscribe<sensor_msgs::NavSatFix>("mavros/global_position/global", 10, nsf_cb); 
+    //GPS info Subscriber
+    Subscriber nsf_sub = n.subscribe<sensor_msgs::NavSatFix>("/mavros/global_position/global", 10, nsf_cb); 
 
-    // //Altitude subscriber
-    // Subscriber alt_sub = n.subscribe<std_msgs::Float64>("mavros/global_position/rel_alt", 10, alt_cb); 
+    //Altitude subscriber
+    Subscriber alt_sub = n.subscribe<std_msgs::Float64>("/mavros/global_position/rel_alt", 10, alt_cb); 
 
     //Waypoint upload header
-    ServiceClient waypush_client = n.serviceClient<mavros_msgs::WaypointPush>("mavros/mission/push"); 
-    // lat_ref = GPS.latitude * (pi/180); //Reference latitude (current latitude of aircraft)
-    // long_ref = GPS.longitude * (pi/180); //Reference longitude (current longitude of aircraft)
+    // ServiceClient waypush_client = n.serviceClient<mavros_msgs::WaypointPush>("/mavros/mission/push"); 
+    lat_ref = GPS.latitude * (pi/180); //Reference latitude (current latitude of aircraft)
+    long_ref = GPS.longitude * (pi/180); //Reference longitude (current longitude of aircraft)
     H_cur = HV.heading; //Current heading
-    // Alt_cur = Alt.data; //Current altitude
+    Alt_cur = Alt.data; //Current altitude
     Rate rate(30.0); //Transmission rate of imagery
 
     Mat BGR = cv_bridge::toCvShare(msg, "bgr8")->image; //Convert image from msg to BGR format
@@ -131,8 +131,8 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg) {
       BH = 0;
       x = circles[0][0] - (orig_image.cols / 2); //x pixel coordinate
       y = circles[0][1] - (orig_image.rows / 2); //y pixel coordinate
-      // xm = (abs(x)/(orig_image.cols/2)) * (Alt_cur*tan(pi/6)); //x displacement in meters
-      // ym = (abs(y)/(orig_image.rows/2)) * (Alt_cur*tan(pi/8)); //y displacement in meters
+      xm = (abs(x)/(orig_image.cols/2)) * (Alt_cur*tan(pi/6)); //x displacement in meters
+      ym = (abs(y)/(orig_image.rows/2)) * (Alt_cur*tan(pi/8)); //y displacement in meters
 
       /* Region designation - (0,0) in top-left corner of 2
       2|1
@@ -164,10 +164,10 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg) {
         BH = BH + 360;
       }
 
-      // GPS.position_covariance_type = 3; //Type of GPS frame reference (3 - Covariance known)
-      // d = sqrt(pow(abs(xm), 2) + pow(abs(ym), 2)) / 1000; //magnitude of vector to target location in km
-      // R = 6378.1; //Radius of the Earth (km)
-      // B = BH * pi/180; //Bearing upward (0 degrees -> radians)
+      GPS.position_covariance_type = 3; //Type of GPS frame reference (3 - Covariance known)
+      d = sqrt(pow(abs(xm), 2) + pow(abs(ym), 2)) / 1000; //magnitude of vector to target location in km
+      R = 6378.1; //Radius of the Earth (km)
+      B = BH * pi/180; //Bearing upward (0 degrees -> radians)
       // wp_target.frame = 3; // mavros_msgs::Waypoint::FRAME_GLOBAL;
       // wp_target.command = 16; //MAV_CMD Waypoint type
       // wp_target.is_current = false;
@@ -182,20 +182,20 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg) {
       // wp_target.x_lat = (asin(sin(lat_ref)*cos(d/R) + cos(lat_ref)*sin(d/R)*cos(B))) * (180/pi); //Target Latitude
       // wp_target.y_long = (long_ref + atan2(sin(B)*sin(d/R)*cos(lat_ref), cos(d/R) - sin(lat_ref)*sin(wp_target.x_lat))) * (180/pi); //Target Longitude
       
-      // float x_lat = (asin(sin(lat_ref)*cos(d/R) + cos(lat_ref)*sin(d/R)*cos(B))) * (180/pi); //Target Latitude
-      // float y_long = (long_ref + atan2(sin(B)*sin(d/R)*cos(lat_ref), cos(d/R) - sin(lat_ref)*sin(x_lat))) * (180/pi); //Target Longitude
+      float x_lat = (asin(sin(lat_ref)*cos(d/R) + cos(lat_ref)*sin(d/R)*cos(B))) * (180/pi); //Target Latitude
+      float y_long = (long_ref + atan2(sin(B)*sin(d/R)*cos(lat_ref), cos(d/R) - sin(lat_ref)*sin(x_lat))) * (180/pi); //Target Longitude
       
 
       //Display target details deduced
-      // ROS_INFO("Lat: %f", x_lat); //Target latitude
-      // ROS_INFO("Long: %f", y_long); //Target Longitude
-      // ROS_INFO("LatRef: %f", lat_ref); //Reference latitude
-      // ROS_INFO("LongRef: %f", long_ref); //Reference longitude
-      // ROS_INFO("xm: %f", xm); //X axis displacement (km)
-      // ROS_INFO("ym: %f", ym); //Y axis displacment (km)
-      // ROS_INFO("displacement: %f", d); //Total displacment (km)
+      ROS_INFO("Lat: %f", x_lat); //Target latitude
+      ROS_INFO("Long: %f", y_long); //Target Longitude
+      ROS_INFO("LatRef: %f", lat_ref); //Reference latitude
+      ROS_INFO("LongRef: %f", long_ref); //Reference longitude
+      ROS_INFO("xm: %f", xm); //X axis displacement (km)
+      ROS_INFO("ym: %f", ym); //Y axis displacment (km)
+      ROS_INFO("displacement: %f", d); //Total displacment (km)
       ROS_INFO("bearing: %f", BH); //Bearing
-      // ROS_INFO("altitude: %f", Alt_cur);
+      ROS_INFO("altitude: %f", Alt_cur);
       ROS_INFO(" ");
       
       //Update target waypoint parameters
@@ -248,8 +248,10 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg) {
       //   rate.sleep();
       // }
 
-      ros::spinOnce();
-      rate.sleep();
+      // ros::spinOnce();
+      // rate.sleep();
+
+      ros::spin();
     }
   }
 
