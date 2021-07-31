@@ -31,6 +31,8 @@ namespace uav_commander {
   class UAVCommander {
     public:
       ros::Publisher localPosPublisher;
+      ros::Publisher localVelPublisher;
+
       ros::Subscriber stateSubscriber;
       ros::Subscriber waypointReachSubscriber;
       ros::Subscriber vfrSubscriber;
@@ -52,6 +54,7 @@ namespace uav_commander {
       ~UAVCommander();
       void setArm();
       void setAutoMissionMode();
+      void setAirspeed(float airspeed);
       
       // void setTakeOff(int takeoffAlt);
       // void setAutoLandMode(std::string mode);
@@ -64,5 +67,8 @@ namespace uav_commander {
       void vfrCB(const mavros_msgs::VFR_HUD::ConstPtr& msg);
 
       void infoWayReached();
+
+      // void initializeManualMode();
+      // void setFlightMode();
   };
 }

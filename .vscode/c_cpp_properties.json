@@ -6,6 +6,7 @@
         "${workspaceFolder}/**",
         "/opt/ros/noetic/include/**",
         "~/Desktop/Aksan/catkin_fwt/devel/include/**",
+        "~/Desktop/Aksan/catkin_fwt/src/uav_percept/include/**",
         "/usr/include/**"
       ],
       "defines": [],

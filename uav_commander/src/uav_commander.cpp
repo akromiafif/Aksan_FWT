@@ -8,12 +8,16 @@
 
 namespace uav_commander {
   UAVCommander::UAVCommander(ros::NodeHandle node) {
-    //Publishers (Transmits information to FCU)
-    localPosPublisher = node.advertise<geometry_msgs::PoseStamped>("/mavros/setpoint_position/local", 10);
+    ROS_INFO("======= UAVCommander Initialize =======" );
 
-    stateSubscriber = node.subscribe<mavros_msgs::State>("/mavros/state", 10, &UAVCommander::stateCB, this);
-    waypointReachSubscriber = node.subscribe<mavros_msgs::WaypointReached>("/mavros/mission/reached", 10, &UAVCommander::waypointReachedCB, this); // Listens for whether the aircraft reached the desired waypoint
-    vfrSubscriber = node.subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 10, &UAVCommander::vfrCB, this); //Listens for aircraft variables
+    //Publishers (Transmits information to FCU)
+    localPosPublisher = node.advertise<geometry_msgs::PoseStamped>("/mavros/setpoint_position/local", 1000);
+    localVelPublisher = node.advertise<geometry_msgs::Twist>("/mavros/setpoint_velocity/cmd_vel_unstamped", 1000);
+
+    //Subscribers (Listens for information from FCU)
+    stateSubscriber = node.subscribe<mavros_msgs::State>("/mavros/state", 1000, &UAVCommander::stateCB, this);
+    waypointReachSubscriber = node.subscribe<mavros_msgs::WaypointReached>("/mavros/mission/reached", 1000, &UAVCommander::waypointReachedCB, this); // Listens for whether the aircraft reached the desired waypoint
+    vfrSubscriber = node.subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 1000, &UAVCommander::vfrCB, this); //Listens for aircraft variables
 
     //Services and Clients (Allows for functions to be defined and called, returning a booleean result as to the clients success at executing the service
     //Two members: request and response
@@ -23,7 +27,8 @@ namespace uav_commander {
     takeoffClient = node.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
     commandClient = node.serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
 
-    ROS_INFO("UAVCommander Initialized");
+    ROS_INFO("======= UAVCommander Initialize Completed =======" );
+    ROS_INFO("                                                 " );
   }
 
   UAVCommander::~UAVCommander(){}
@@ -43,39 +48,55 @@ namespace uav_commander {
     vfrHUD = *msg;
   }
 
+  //Arming the aircraft
   void UAVCommander::setArm() {
     ROS_INFO(" ===== Arming UAV ===== ");
-    mavros_msgs::CommandBool arm_request;
-    arm_request.request.value = true;
 
-    while (!currStateGlobal.armed && !arm_request.response.success && ros::ok()) {
+    mavros_msgs::CommandBool srv_arm;
+    mavros_msgs::CommandBool::Request request;
+    mavros_msgs::CommandBool::Response response;
+
+    request.value = true;
+    bool success = false;
+
+    while (!currStateGlobal.armed && !response.success && ros::ok()) {
       ros::Duration(.1).sleep();
-      armingClient.call(arm_request);
+
+      success = armingClient.call(request, response);
     }
 
-    if(arm_request.response.success) {
-      ROS_INFO("Arming Successfull");	
+    if(success) {
+      ROS_INFO("Arming ON");	
     } else {
-      ROS_INFO("Arming failed with %d", arm_request.response.success);
+      ROS_INFO("Arming failed with %d", response.success);
     }
-    ROS_INFO(" ===== Arming Completed ===== ");
 
     ros::Rate rate(20.0);
     ros::spinOnce();
     rate.sleep();
+
+    ROS_INFO(" ===== Arming Completed ===== ");
+    ROS_INFO("                              ");
   }
 
+  //Set aircraft to AUTO mode
   void UAVCommander::setAutoMissionMode() {
-    ROS_INFO(" ===== Auto Mission UAV ===== ");
-    mavros_msgs::SetMode srv_setMode;
-    srv_setMode.request.base_mode = 0;
-    std::string mode = "AUTO.MISSION";
-    srv_setMode.request.custom_mode = mode.c_str();
+    ROS_INFO(" ===== Auto Mission Mode ===== ");
 
-    if(setModeClient.call(srv_setMode)){
-      ROS_INFO("SetMode to Auto Mission Mode Successfull");
-    }else{
-      ROS_ERROR("Failed SetMode to Auto Mission Mode");
+    mavros_msgs::SetMode srv_setMode;
+    mavros_msgs::SetMode::Request request;
+    mavros_msgs::SetMode::Response response;
+
+    request.base_mode = 0;
+    std::string mode = "AUTO.MISSION";
+    request.custom_mode = mode.c_str();
+
+    bool success = setModeClient.call(request, response);
+
+    if(success){
+      ROS_INFO("Auto Mission ON");
+    } else{ 
+      ROS_ERROR("Failed to Auto Mission");
     }
     ROS_INFO(" ===== Auto Mission Completed ===== ");
 
@@ -83,8 +104,12 @@ namespace uav_commander {
     ros::Rate rate(20.0);
     ros::spinOnce();
     rate.sleep();
+
+    ROS_INFO(" ===== Auto Mission Mode Completed ===== ");
+    ROS_INFO("                                         ");
   }
 
+  //Analize the data from aircraft
   void UAVCommander::infoWayReached() {
     while (ros::ok) {
       if (WayReached.wp_seq == 1) {
@@ -101,6 +126,20 @@ namespace uav_commander {
     }
   }
 
+  //Define flight linear velocity
+  void UAVCommander::setAirspeed(float airspeed) {
+    ROS_INFO(" ===== Set Airspeed ===== ");
+
+    geometry_msgs::Twist velocity;
+    velocity.linear.x = airspeed;
+    localVelPublisher.publish(velocity);
+
+    ros::Rate rate(20.0);
+    ros::spinOnce();
+    rate.sleep();
+  
+    ROS_INFO(" ===== Set Airspeed Completed ===== ");
+  }
 
 
 
@@ -115,11 +154,84 @@ namespace uav_commander {
 
 
 
+  
+
+  
+  // void UAVCommander::initializeManualMode() {
+  //   ROS_INFO(" ===== Initialize Manual Mode ===== ");
+  //   ros::Rate rate(20.0); 
+  //   ros::Time lastRequest = ros::Time::now();
+  //   mavros_msgs::SetMode srv_setMode;
+  //   mavros_msgs::CommandBool srv_motorCMD;
+
+  //   std::string mode = "MANUAL";
+  //   srv_setMode.request.custom_mode = mode.c_str();
+  //   srv_motorCMD.request.value = false;
+
+  //   while (currStateGlobal.mode != "MANUAL" || currStateGlobal.armed) { //Disarming and MANUAL mode transmission loop 
+  //     if (currStateGlobal.mode != "MANUAL" && (ros::Time::now() - lastRequest > ros::Duration(0.2))) { //Delay by 'X' seconds to prevent bottleneck
+      
+  //       if (setModeClient.call(srv_setMode) && srv_setMode.response.mode_sent) { //Call service client
+  //         ROS_INFO("Manual Flight Mode"); //Confirmation
+  //       }
+
+  //       lastRequest = ros::Time::now(); //Update timer
+  //     } else {
+  //       if (currStateGlobal.armed && (ros::Time::now() - lastRequest > ros::Duration(0.2))) { //Delay by 'X' seconds to prevent bottleneck
+      
+  //         if (armingClient.call(srv_motorCMD) && srv_motorCMD.response.success) { //Call service client
+  //           ROS_INFO("Motors Disarmed"); //Confirmation
+  //         }
+  //         lastRequest = ros::Time::now(); //Update timer
+  //       }
+  //     }
+
+  //     ros::spinOnce();
+  //     rate.sleep();
+  //   }
+  //   ROS_INFO(" ===== Initialize Manual Mode Completed ===== ");
+  // }
 
 
+  // /*************Flight Mode Selection************/
+  // //Defines desired aircraft flight mode and arms motors
+  // void UAVCommander::setFlightMode() {
+  //   ROS_INFO(" ===== Set Flight Mode ===== ");
 
+  //   ros::Rate rate(20.0); 
+  //   ros::Time lastRequest = ros::Time::now();
+  //   mavros_msgs::SetMode srv_setMode;
+  //   mavros_msgs::CommandBool srv_motorCMD;
 
+  //   srv_setMode.request.custom_mode = "AUTO"; //Assign the desired aircraft flight mode
+  //   srv_motorCMD.request.value = true; //Arm the aircraft (Service-Clientmemeber)
+  //   lastRequest = ros::Time::now();
 
+  //   //Confirm that flight mode was successfully entered
+  //   while(currStateGlobal.mode != "AUTO" || !currStateGlobal.armed) { //Arming and AUTO Flight Mode Transmission Loop{
+  //     if(!currStateGlobal.armed && (ros::Time::now() - lastRequest > ros::Duration(2.0))) { //Delay by 'X' seconds to prevent bottleneck    
+  //       if(armingClient.call(srv_motorCMD) && srv_motorCMD.response.success) {
+  //         ROS_INFO("Aircraft Armed");
+  //       }
+  //       lastRequest = ros::Time::now(); //Update current timer time
+  //     }
+
+  //     if(!currStateGlobal.armed && (ros::Time::now() - lastRequest > ros::Duration(2.0))) {
+  //       if(currStateGlobal.mode != "AUTO" && (ros::Time::now() - lastRequest > ros::Duration(2.0))) { //Delay by 'X' seconds to prevent bottleneck
+        
+  //         if(setModeClient.call(srv_setMode) && srv_setMode.response.mode_sent) {
+  //           ROS_INFO("AUTO Flight Mode");
+  //         }
+  //         lastRequest = ros::Time::now();
+  //       }
+  //     }
+
+  //     ros::spinOnce();
+  //     rate.sleep();
+  //   }
+
+  //   ROS_INFO(" ===== Set Flight Mode Completed ===== ");
+  // }
 
   // void UAVCommander::loadMission() {
   //   std::string const HOME = std::getenv("HOME") ? std::getenv("HOME") : ".";
