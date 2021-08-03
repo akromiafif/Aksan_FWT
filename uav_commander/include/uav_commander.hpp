@@ -5,6 +5,7 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <std_msgs/Bool.h>
 
 //MAVROS Message Types
 #include <mavros_msgs/OverrideRCIn.h> //Payload release
@@ -25,13 +26,12 @@
 #include <mavros_msgs/WaypointSetCurrent.h> //Define a waypoint for the aircraft to fly to (Provide index)
 
 
-
-
 namespace uav_commander {
   class UAVCommander {
     public:
       ros::Publisher localPosPublisher;
       ros::Publisher localVelPublisher;
+      ros::Publisher lapInfoPublisher;
 
       ros::Subscriber stateSubscriber;
       ros::Subscriber waypointReachSubscriber;
@@ -49,6 +49,10 @@ namespace uav_commander {
       mavros_msgs::VFR_HUD vfrHUD;
       nav_msgs::Odometry currPoseGlobal;
 
+      std_msgs::Bool lapOne;
+      std_msgs::Bool lapTwo;
+      std_msgs::Bool lapThree;
+      
     public:
       UAVCommander(ros::NodeHandle node);
       ~UAVCommander();

@@ -2,8 +2,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
-
+#include <uav_commander/lap_info.h>
 
 
 namespace uav_commander {
@@ -13,6 +12,7 @@ namespace uav_commander {
     //Publishers (Transmits information to FCU)
     localPosPublisher = node.advertise<geometry_msgs::PoseStamped>("/mavros/setpoint_position/local", 1000);
     localVelPublisher = node.advertise<geometry_msgs::Twist>("/mavros/setpoint_velocity/cmd_vel_unstamped", 1000);
+    lapInfoPublisher = node.advertise<uav_commander::lap_info>("/lap_info", 1000);
 
     //Subscribers (Listens for information from FCU)
     stateSubscriber = node.subscribe<mavros_msgs::State>("/mavros/state", 1000, &UAVCommander::stateCB, this);
@@ -27,6 +27,7 @@ namespace uav_commander {
     takeoffClient = node.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
     commandClient = node.serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
 
+    //OTW Meninggal
     ROS_INFO("======= UAVCommander Initialize Completed =======" );
     ROS_INFO("                                                 " );
   }
@@ -111,14 +112,51 @@ namespace uav_commander {
 
   //Analize the data from aircraft
   void UAVCommander::infoWayReached() {
+    uav_commander::lap_info lapInfo;
+
+    int counter = 0;
     while (ros::ok) {
       if (WayReached.wp_seq == 1) {
         ROS_INFO("alt: %f", vfrHUD.altitude);
         ROS_INFO("heading: %d", vfrHUD.heading);
         ROS_INFO("WP: reached %d", WayReached.wp_seq);
-      } else if (WayReached.wp_seq == 3) {
-        ROS_INFO("WP: reached %d", WayReached.wp_seq);
       }
+
+      if (WayReached.wp_seq == 3) {
+        lapOne.data = true;
+      } else {
+        lapOne.data = false;
+      }
+
+      if (WayReached.wp_seq == 7) {
+        lapTwo.data = true;
+      } else {
+        lapTwo.data = false;
+      }
+
+      if (WayReached.wp_seq == 11) {
+        lapThree.data = true;
+      } else {
+        lapThree.data = false;
+      }
+
+      if (lapOne.data) {
+        ROS_INFO("Lap %d Completed ", lapOne.data);
+      }
+
+      if (lapTwo.data) {
+        ROS_INFO("Lap %d Completed ", lapTwo.data);
+      }
+
+      if (lapThree.data) {
+        ROS_INFO("Lap %d Completed ", lapThree.data);
+      }
+
+      lapInfo.lap_one = lapOne;
+      lapInfo.lap_two = lapTwo;
+      lapInfo.lap_three = lapThree;
+
+      lapInfoPublisher.publish(lapInfo);
 
       ros::Rate rate(20.0);
       ros::spinOnce();
