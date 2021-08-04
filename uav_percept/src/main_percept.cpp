@@ -5,7 +5,6 @@
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "uav_percept_node");
   ros::NodeHandle uav_percept_node;
-	ros::Rate rate(20.0);
 
   uav_percept::UAVPercept uavCapture(uav_percept_node);
 

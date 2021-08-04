@@ -8,6 +8,7 @@
 #include <mavros_msgs/VFR_HUD.h> 
 #include <sensor_msgs/NavSatFix.h> 
 #include <std_msgs/Float64.h>
+#include <uav_commander/lap_info.h>
 #include <math.h>
 
 using namespace cv;
@@ -20,9 +21,10 @@ namespace uav_percept {
   class UAVPercept {
     public: 
       image_transport::Subscriber itSubscriber;
-      Subscriber vfrHUDSubscriber;
-      Subscriber nsfSubscriber;
-      Subscriber altSubscriber;
+      ros::Subscriber vfrHUDSubscriber;
+      ros::Subscriber nsfSubscriber;
+      ros::Subscriber altSubscriber;
+      ros::Subscriber lapInfoSubscriber;
 
       //Variables
       float bearingDropZone = 0; //Drop-zone Bearing
@@ -43,6 +45,7 @@ namespace uav_percept {
       mavros_msgs::VFR_HUD vfrHUD;
       sensor_msgs::NavSatFix GPS;
       std_msgs::Float64 Alt;
+      uav_commander::lap_info lapInfo;
       
     public:
       UAVPercept(ros::NodeHandle node);
@@ -52,5 +55,6 @@ namespace uav_percept {
       void vfrCB(const mavros_msgs::VFR_HUD::ConstPtr& msg);
       void nsfCB(const sensor_msgs::NavSatFix::ConstPtr& msg);
       void altCB(const std_msgs::Float64::ConstPtr& msg);
+      void lapInfoCB(const uav_commander::lap_info::ConstPtr& msg);
   };
 }

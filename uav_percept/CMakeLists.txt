@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+  uav_commander
 )
 
 find_package(OpenCV 4 REQUIRED)
@@ -219,3 +220,5 @@ target_link_libraries(uav_default ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 add_executable(main_percept src/main_percept.cpp)
 target_link_libraries(main_percept ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+add_dependencies(uav_capture ${catkin_EXPORTED_TARGETS})

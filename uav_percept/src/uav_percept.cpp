@@ -1,4 +1,5 @@
 #include <uav_percept.hpp>
+#include <uav_commander/lap_info.h>
 
 
 
@@ -22,9 +23,11 @@ namespace uav_percept {
     //GPS Subscriber
     nsfSubscriber = node.subscribe<sensor_msgs::NavSatFix>("/mavros/global_position/global", 10, &UAVPercept::nsfCB, this);
 
-    //Altitude subscriber
+    //Altitude Subscriber
     altSubscriber = node.subscribe<std_msgs::Float64>("/mavros/global_position/rel_alt", 10, &UAVPercept::altCB, this); 
 
+    //LapInfo Subscriber
+    lapInfoSubscriber = node.subscribe<uav_commander::lap_info>("/lap_info", 10, &UAVPercept::lapInfoCB, this); 
   }
 
   UAVPercept::~UAVPercept() {}
@@ -41,7 +44,23 @@ namespace uav_percept {
     Alt = *msg;
   }
 
+  void UAVPercept::lapInfoCB(const uav_commander::lap_info::ConstPtr& msg) {
+    lapInfo = *msg;
+  }
+
   void UAVPercept::improCB(const sensor_msgs::ImageConstPtr& msg) {
+    if (lapInfo.lap_one.data) {
+      ROS_INFO("Lap 1 Completed");
+    }
+
+    if (lapInfo.lap_two.data) {
+      ROS_INFO("Lap 2 Completed");
+    }
+
+    if (lapInfo.lap_three.data) {
+      ROS_INFO("Lap 3 Completed");
+    }
+
     try {
       latRef = GPS.latitude * (pi/180); //Reference latitude (current latitude of aircraft)
       longRef = GPS.longitude * (pi/180); //Reference longitude (current longitude of aircraft)
@@ -104,7 +123,7 @@ namespace uav_percept {
       //Display circle image overlay
       imshow("Vision Output", orig_image);
       //Define image size
-      ROS_INFO("Size: (W) %i x (H) %i", orig_image.cols, orig_image.rows);
+      // ROS_INFO("Size: (W) %i x (H) %i", orig_image.cols, orig_image.rows);
 
       //Target Locating
       //Check if any circles were detected

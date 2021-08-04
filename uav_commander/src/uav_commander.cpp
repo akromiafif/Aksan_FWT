@@ -140,18 +140,6 @@ namespace uav_commander {
         lapThree.data = false;
       }
 
-      if (lapOne.data) {
-        ROS_INFO("Lap %d Completed ", lapOne.data);
-      }
-
-      if (lapTwo.data) {
-        ROS_INFO("Lap %d Completed ", lapTwo.data);
-      }
-
-      if (lapThree.data) {
-        ROS_INFO("Lap %d Completed ", lapThree.data);
-      }
-
       lapInfo.lap_one = lapOne;
       lapInfo.lap_two = lapTwo;
       lapInfo.lap_three = lapThree;
