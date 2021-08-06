@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <uav_commander/lap_info.h>
+#include <uav_commander/impro_info.h>
 
 
 namespace uav_commander {
@@ -13,6 +14,7 @@ namespace uav_commander {
     localPosPublisher = node.advertise<geometry_msgs::PoseStamped>("/mavros/setpoint_position/local", 1000);
     localVelPublisher = node.advertise<geometry_msgs::Twist>("/mavros/setpoint_velocity/cmd_vel_unstamped", 1000);
     lapInfoPublisher = node.advertise<uav_commander::lap_info>("/lap_info", 1000);
+    improInfoPublisher = node.advertise<uav_commander::impro_info>("/impro_info", 1000);
 
     //Subscribers (Listens for information from FCU)
     stateSubscriber = node.subscribe<mavros_msgs::State>("/mavros/state", 1000, &UAVCommander::stateCB, this);
@@ -114,13 +116,12 @@ namespace uav_commander {
   void UAVCommander::infoWayReached() {
     uav_commander::lap_info lapInfo;
 
-    int counter = 0;
-    while (ros::ok) {
-      if (WayReached.wp_seq == 1) {
-        ROS_INFO("alt: %f", vfrHUD.altitude);
-        ROS_INFO("heading: %d", vfrHUD.heading);
-        ROS_INFO("WP: reached %d", WayReached.wp_seq);
-      }
+    // while (ros::ok) {
+      // if (WayReached.wp_seq == 1) {
+      //   ROS_INFO("alt: %f", vfrHUD.altitude);
+      //   ROS_INFO("heading: %d", vfrHUD.heading);
+      //   ROS_INFO("WP: reached %d", WayReached.wp_seq);
+      // }
 
       if (WayReached.wp_seq == 3) {
         lapOne.data = true;
@@ -146,10 +147,32 @@ namespace uav_commander {
 
       lapInfoPublisher.publish(lapInfo);
 
-      ros::Rate rate(20.0);
-      ros::spinOnce();
-      rate.sleep();
-    }
+    //   ros::Rate rate(20.0);
+    //   ros::spinOnce();
+    //   rate.sleep();
+    // }
+  }
+
+  void UAVCommander::isImproEnabled() {
+    uav_commander::impro_info improInfo;
+
+    // while(ros::ok) {
+      if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
+        improEnabled.data = true;
+        improInfo.impro_enabled = improEnabled;
+      }
+
+      if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
+        improEnabled.data = false;
+        improInfo.impro_enabled = improEnabled;
+      }
+
+      improInfoPublisher.publish(improInfo);
+
+    //   ros::Rate rate(20.0);
+    //   ros::spinOnce();
+    //   rate.sleep();
+    // }
   }
 
   //Define flight linear velocity

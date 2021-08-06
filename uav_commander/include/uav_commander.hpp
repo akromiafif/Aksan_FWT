@@ -32,6 +32,7 @@ namespace uav_commander {
       ros::Publisher localPosPublisher;
       ros::Publisher localVelPublisher;
       ros::Publisher lapInfoPublisher;
+      ros::Publisher improInfoPublisher;
 
       ros::Subscriber stateSubscriber;
       ros::Subscriber waypointReachSubscriber;
@@ -52,6 +53,8 @@ namespace uav_commander {
       std_msgs::Bool lapOne;
       std_msgs::Bool lapTwo;
       std_msgs::Bool lapThree;
+
+      std_msgs::Bool improEnabled;
       
     public:
       UAVCommander(ros::NodeHandle node);
@@ -71,6 +74,7 @@ namespace uav_commander {
       void vfrCB(const mavros_msgs::VFR_HUD::ConstPtr& msg);
 
       void infoWayReached();
+      void isImproEnabled();
 
       // void initializeManualMode();
       // void setFlightMode();

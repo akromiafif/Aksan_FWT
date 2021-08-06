@@ -2,7 +2,10 @@
 #include <image_transport/image_transport.h> 
 #include <opencv2/highgui/highgui.hpp> 
 #include <cv_bridge/cv_bridge.h>
-#include <sstream> 
+#include <sstream>
+
+#include <uav_commander/impro_info.h>
+
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "uav_percept_publisher");
@@ -14,7 +17,6 @@ int main(int argc, char** argv) {
 
   if(!cap.isOpened()) return 1;
   cv::Mat frame; 
-  ros::Rate rate(30);
 
   while (nh.ok()) {
     cap >> frame; 
@@ -22,6 +24,7 @@ int main(int argc, char** argv) {
     itPublisher.publish(msg);
     cv::waitKey(1);
     
+    ros::Rate rate(30);
     ros::spinOnce();
     rate.sleep();
   }

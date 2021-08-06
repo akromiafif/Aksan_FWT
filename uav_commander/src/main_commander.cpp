@@ -29,8 +29,18 @@ int main(int argc, char** argv) {
 	uavCommander.setAirspeed(20.0);
 	uavCommander.setArm();
 	
-	ROS_INFO("========== READING WAYPOINT ==========");
-	uavCommander.infoWayReached();
+	ROS_INFO("========== STATUS ==========");
+
+	while (ros::ok) {
+		// uavCommander.infoWayReached();
+		uavCommander.isImproEnabled();
+
+		ros::Rate rate(20.0);
+		ros::spinOnce();
+		rate.sleep();
+	}
+
+	ROS_INFO("========== STATUS ==========");
 
 	ros::spin();
 	return 0;
