@@ -71,10 +71,10 @@ namespace uav_percept {
       // ROS_INFO("Impro Enabled");
 
       try {
-        latRef = GPS.latitude * (pi/180); //Reference latitude (current latitude of aircraft)
-        longRef = GPS.longitude * (pi/180); //Reference longitude (current longitude of aircraft)
-        headingCurrent = vfrHUD.heading; //Current heading
-        altCurrent = Alt.data; //Current altitude
+        // latRef = GPS.latitude * (pi/180); //Reference latitude (current latitude of aircraft)
+        // longRef = GPS.longitude * (pi/180); //Reference longitude (current longitude of aircraft)
+        // headingCurrent = vfrHUD.heading; //Current heading
+        // altCurrent = Alt.data; //Current altitude
         Rate rate(30.0); //Transmission rate of imagery
         
         //Convert image from msg to BGR format
