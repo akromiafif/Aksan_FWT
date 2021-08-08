@@ -6,6 +6,8 @@
 
 #include <uav_commander/impro_info.h>
 
+using namespace std;
+using namespace cv;
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "uav_percept_publisher");
@@ -18,8 +20,17 @@ int main(int argc, char** argv) {
   if(!cap.isOpened()) return 1;
   cv::Mat frame; 
 
+  // Obtain frame size information using get() method
+  // int frame_width = static_cast<int>(cap.get(3));
+  // int frame_height = static_cast<int>(cap.get(4));
+  // cv::Size frame_size(frame_width, frame_height);
+  // int fps = 20;
+
+  // VideoWriter output("output.avi", VideoWriter::fourcc('M', 'J', 'P', 'G'),fps, frame_size);
+
   while (nh.ok()) {
     cap >> frame; 
+    // output.write(frame);
     msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
     itPublisher.publish(msg);
     cv::waitKey(1);
