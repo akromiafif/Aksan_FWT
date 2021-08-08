@@ -67,7 +67,7 @@ namespace uav_percept {
     //   ROS_INFO("Lap 3 Completed");
     // }
 
-    if (improInfo.impro_enabled.data) {
+    // if (improInfo.impro_enabled.data) {
       // ROS_INFO("Impro Enabled");
 
       try {
@@ -200,7 +200,7 @@ namespace uav_percept {
       } catch (cv_bridge::Exception& e) {
         ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
       }
-    }
+    // }
   }
 }
 
