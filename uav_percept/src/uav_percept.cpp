@@ -129,8 +129,12 @@ namespace uav_percept {
           waitKey(30);  
         }
 
+        if (circles.size() > 0) {
+          ROS_INFO("Red Circles Detected");
+        }
+
         //Display circle image overlay
-        imshow("Vision Output", orig_image);
+        // imshow("Vision Output", orig_image);
         //Define image size
         // ROS_INFO("Size: (W) %i x (H) %i", orig_image.cols, orig_image.rows);
 
