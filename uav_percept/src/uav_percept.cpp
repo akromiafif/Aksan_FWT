@@ -24,11 +24,11 @@ namespace uav_percept {
     //Altitude Subscriber
     altSubscriber = node.subscribe<std_msgs::Float64>("/mavros/global_position/rel_alt", 10, &UAVPercept::altCB, this); 
 
-    //LapInfo Subscriber
-    lapInfoSubscriber = node.subscribe<uav_commander::lap_info>("/lap_info", 10, &UAVPercept::lapInfoCB, this); 
+    // //LapInfo Subscriber
+    // lapInfoSubscriber = node.subscribe<uav_commander::lap_info>("/lap_info", 10, &UAVPercept::lapInfoCB, this); 
 
-    //improInfo Subscriber
-    improInfoSubscriber = node.subscribe<uav_commander::impro_info>("/impro_info", 10, &UAVPercept::improInfoCB, this);
+    // //improInfo Subscriber
+    // improInfoSubscriber = node.subscribe<uav_commander::impro_info>("/impro_info", 10, &UAVPercept::improInfoCB, this);
   }
 
   UAVPercept::~UAVPercept() {}
@@ -45,13 +45,13 @@ namespace uav_percept {
     Alt = *msg;
   }
 
-  void UAVPercept::lapInfoCB(const uav_commander::lap_info::ConstPtr& msg) {
-    lapInfo = *msg;
-  }
+  // void UAVPercept::lapInfoCB(const uav_commander::lap_info::ConstPtr& msg) {
+  //   lapInfo = *msg;
+  // }
 
-  void UAVPercept::improInfoCB(const uav_commander::impro_info::ConstPtr& msg) {
-    improInfo = *msg;
-  }
+  // void UAVPercept::improInfoCB(const uav_commander::impro_info::ConstPtr& msg) {
+  //   improInfo = *msg;
+  // }
 
 
   void UAVPercept::improCB(const sensor_msgs::ImageConstPtr& msg) {
