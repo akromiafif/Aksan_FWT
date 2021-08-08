@@ -136,14 +136,14 @@ namespace uav_percept {
 
         //Target Locating
         //Check if any circles were detected
-        if(circles.size() != 0) {
-          WaypointPush waypush;
-          //Target bearing
-          bearingDropZone = 0;
-          x = circles[0][0] - (orig_image.cols / 2); //x pixel coordinate
-          y = circles[0][1] - (orig_image.rows / 2); //y pixel coordinate
-          xm = (abs(x)/(orig_image.cols/2)) * (altCurrent*tan(pi/6)); //x displacement in meters
-          ym = (abs(y)/(orig_image.rows/2)) * (altCurrent*tan(pi/8)); //y displacement in meters
+        // if(circles.size() != 0) {
+        //   WaypointPush waypush;
+        //   //Target bearing
+        //   bearingDropZone = 0;
+        //   x = circles[0][0] - (orig_image.cols / 2); //x pixel coordinate
+        //   y = circles[0][1] - (orig_image.rows / 2); //y pixel coordinate
+        //   xm = (abs(x)/(orig_image.cols/2)) * (altCurrent*tan(pi/6)); //x displacement in meters
+        //   ym = (abs(y)/(orig_image.rows/2)) * (altCurrent*tan(pi/8)); //y displacement in meters
 
           /* Region designation - (0,0) in top-left corner of 2
           2|1
@@ -153,50 +153,50 @@ namespace uav_percept {
           
           //Determine bearing of target based on image segment
           //region 2 and 3
-          if(circles[0][0] >= 0 && circles[0][0] <= (orig_image.cols / 2))  {
-            if(circles[0][1] >= 0 && circles[0][1] <= (orig_image.rows /2)) { //region 2
-              bearingDropZone = headingCurrent + atan(abs(x)/abs(y));
-            } else { //region 3
-              bearingDropZone = headingCurrent + (180 - atan(abs(x)/abs(y)));
-            }
-          } else { //region 1 and 4
-            if(circles[0][1] > (orig_image.rows / 2)) { //region 4
-              bearingDropZone = headingCurrent + 180 + atan(abs(x)/abs(y));
-            } else { //region 1
-              bearingDropZone = headingCurrent - atan(abs(x)/abs(y));
-            }
-          }
+          // if(circles[0][0] >= 0 && circles[0][0] <= (orig_image.cols / 2))  {
+          //   if(circles[0][1] >= 0 && circles[0][1] <= (orig_image.rows /2)) { //region 2
+          //     bearingDropZone = headingCurrent + atan(abs(x)/abs(y));
+          //   } else { //region 3
+          //     bearingDropZone = headingCurrent + (180 - atan(abs(x)/abs(y)));
+          //   }
+          // } else { //region 1 and 4
+          //   if(circles[0][1] > (orig_image.rows / 2)) { //region 4
+          //     bearingDropZone = headingCurrent + 180 + atan(abs(x)/abs(y));
+          //   } else { //region 1
+          //     bearingDropZone = headingCurrent - atan(abs(x)/abs(y));
+          //   }
+          // }
 
-          //Bearing regression (0 - 359)
-          if(bearingDropZone >= 360) {
-            bearingDropZone = bearingDropZone - 360;
-          } else if(bearingDropZone < 0) {
-            bearingDropZone = bearingDropZone + 360;
-          }
+          // //Bearing regression (0 - 359)
+          // if(bearingDropZone >= 360) {
+          //   bearingDropZone = bearingDropZone - 360;
+          // } else if(bearingDropZone < 0) {
+          //   bearingDropZone = bearingDropZone + 360;
+          // }
 
-          GPS.position_covariance_type = 3; //Type of GPS frame reference (3 - Covariance known)
-          d = sqrt(pow(abs(xm), 2) + pow(abs(ym), 2)) / 1000; //magnitude of vector to target location in km
-          R = 6378.1; //Radius of the Earth (km)
-          bearing = bearingDropZone * pi/180; //Bearing upward (0 degrees -> radians)
+          // GPS.position_covariance_type = 3; //Type of GPS frame reference (3 - Covariance known)
+          // d = sqrt(pow(abs(xm), 2) + pow(abs(ym), 2)) / 1000; //magnitude of vector to target location in km
+          // R = 6378.1; //Radius of the Earth (km)
+          // bearing = bearingDropZone * pi/180; //Bearing upward (0 degrees -> radians)
 
-          float x_lat = (asin(sin(latRef)*cos(d/R) + cos(latRef)*sin(d/R)*cos(bearing))) * (180/pi); //Target Latitude
-          float y_long = (longRef + atan2(sin(bearing)*sin(d/R)*cos(latRef), cos(d/R) - sin(latRef)*sin(x_lat))) * (180/pi); //Target Longitude
+          // float x_lat = (asin(sin(latRef)*cos(d/R) + cos(latRef)*sin(d/R)*cos(bearing))) * (180/pi); //Target Latitude
+          // float y_long = (longRef + atan2(sin(bearing)*sin(d/R)*cos(latRef), cos(d/R) - sin(latRef)*sin(x_lat))) * (180/pi); //Target Longitude
           
 
-          //Display target details deduced
-          ROS_INFO("Lat: %f", x_lat); //Target latitude
-          ROS_INFO("Long: %f", y_long); //Target Longitude
-          ROS_INFO("LatRef: %f", latRef); //Reference latitude
-          ROS_INFO("LongRef: %f", longRef); //Reference longitude
-          ROS_INFO("xm: %f", xm); //X axis displacement (km)
-          ROS_INFO("ym: %f", ym); //Y axis displacment (km)
-          ROS_INFO("displacement: %f", d); //Total displacment (km)
-          ROS_INFO("bearing: %f", bearingDropZone); //Bearing
-          ROS_INFO("altitude: %f", altCurrent);
-          ROS_INFO(" ");
+          // // Display target details deduced
+          // ROS_INFO("Lat: %f", x_lat); //Target latitude
+          // ROS_INFO("Long: %f", y_long); //Target Longitude
+          // ROS_INFO("LatRef: %f", latRef); //Reference latitude
+          // ROS_INFO("LongRef: %f", longRef); //Reference longitude
+          // ROS_INFO("xm: %f", xm); //X axis displacement (km)
+          // ROS_INFO("ym: %f", ym); //Y axis displacment (km)
+          // ROS_INFO("displacement: %f", d); //Total displacment (km)
+          // ROS_INFO("bearing: %f", bearingDropZone); //Bearing
+          // ROS_INFO("altitude: %f", altCurrent);
+          // ROS_INFO(" ");
           
           ros::spin();
-        }
+        // }
       } catch (cv_bridge::Exception& e) {
         ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
       }
