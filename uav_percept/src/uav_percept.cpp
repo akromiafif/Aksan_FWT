@@ -15,14 +15,14 @@ namespace uav_percept {
     //Image subscriber to "camera/image" topic
     itSubscriber = it.subscribe("camera/image", 10, &UAVPercept::improCB, this); 
 
-    //VFR_HUD Subscriber
-    vfrHUDSubscriber = node.subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 10, &UAVPercept::vfrCB, this);
+    // //VFR_HUD Subscriber
+    // vfrHUDSubscriber = node.subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 10, &UAVPercept::vfrCB, this);
 
-    //GPS Subscriber
-    nsfSubscriber = node.subscribe<sensor_msgs::NavSatFix>("/mavros/global_position/global", 10, &UAVPercept::nsfCB, this);
+    // //GPS Subscriber
+    // nsfSubscriber = node.subscribe<sensor_msgs::NavSatFix>("/mavros/global_position/global", 10, &UAVPercept::nsfCB, this);
 
-    //Altitude Subscriber
-    altSubscriber = node.subscribe<std_msgs::Float64>("/mavros/global_position/rel_alt", 10, &UAVPercept::altCB, this); 
+    // //Altitude Subscriber
+    // altSubscriber = node.subscribe<std_msgs::Float64>("/mavros/global_position/rel_alt", 10, &UAVPercept::altCB, this); 
 
     // //LapInfo Subscriber
     // lapInfoSubscriber = node.subscribe<uav_commander::lap_info>("/lap_info", 10, &UAVPercept::lapInfoCB, this); 
@@ -33,17 +33,17 @@ namespace uav_percept {
 
   UAVPercept::~UAVPercept() {}
 
-  void UAVPercept::vfrCB(const mavros_msgs::VFR_HUD::ConstPtr& msg) {
-    vfrHUD = *msg;
-  }
+  // void UAVPercept::vfrCB(const mavros_msgs::VFR_HUD::ConstPtr& msg) {
+  //   vfrHUD = *msg;
+  // }
 
-  void UAVPercept::nsfCB(const sensor_msgs::NavSatFix::ConstPtr& msg) {
-    GPS = *msg;
-  }
+  // void UAVPercept::nsfCB(const sensor_msgs::NavSatFix::ConstPtr& msg) {
+  //   GPS = *msg;
+  // }
 
-  void UAVPercept::altCB(const std_msgs::Float64::ConstPtr& msg) {
-    Alt = *msg;
-  }
+  // void UAVPercept::altCB(const std_msgs::Float64::ConstPtr& msg) {
+  //   Alt = *msg;
+  // }
 
   // void UAVPercept::lapInfoCB(const uav_commander::lap_info::ConstPtr& msg) {
   //   lapInfo = *msg;

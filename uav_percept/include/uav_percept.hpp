@@ -27,11 +27,11 @@ namespace uav_percept {
   class UAVPercept {
     public: 
       image_transport::Subscriber itSubscriber;
-      ros::Subscriber vfrHUDSubscriber;
-      ros::Subscriber nsfSubscriber;
-      ros::Subscriber altSubscriber;
-      ros::Subscriber lapInfoSubscriber;
-      ros::Subscriber improInfoSubscriber;
+      // ros::Subscriber vfrHUDSubscriber;
+      // ros::Subscriber nsfSubscriber;
+      // ros::Subscriber altSubscriber;
+      // ros::Subscriber lapInfoSubscriber;
+      // ros::Subscriber improInfoSubscriber;
 
       //Variables
       float bearingDropZone = 0; //Drop-zone Bearing
@@ -60,10 +60,10 @@ namespace uav_percept {
       ~UAVPercept();
 
       void improCB(const sensor_msgs::ImageConstPtr& msg);
-      void vfrCB(const mavros_msgs::VFR_HUD::ConstPtr& msg);
-      void nsfCB(const sensor_msgs::NavSatFix::ConstPtr& msg);
-      void altCB(const std_msgs::Float64::ConstPtr& msg);
-      void lapInfoCB(const uav_commander::lap_info::ConstPtr& msg);
-      void improInfoCB(const uav_commander::impro_info::ConstPtr& msg);
+      // void vfrCB(const mavros_msgs::VFR_HUD::ConstPtr& msg);
+      // void nsfCB(const sensor_msgs::NavSatFix::ConstPtr& msg);
+      // void altCB(const std_msgs::Float64::ConstPtr& msg);
+      // void lapInfoCB(const uav_commander::lap_info::ConstPtr& msg);
+      // void improInfoCB(const uav_commander::impro_info::ConstPtr& msg);
   };
 }
