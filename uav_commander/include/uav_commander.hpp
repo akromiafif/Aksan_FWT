@@ -57,7 +57,7 @@ namespace uav_commander {
       std_msgs::Bool improEnabled;
       
     public:
-      UAVCommander(ros::NodeHandle node);
+      UAVCommander(ros::NodeHandle* node);
       ~UAVCommander();
       void setArm();
       void setAutoMissionMode();

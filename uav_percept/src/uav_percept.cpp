@@ -1,8 +1,15 @@
 #include <uav_percept.hpp>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <string>
+
+using namespace std;
+using namespace cv;
 
 
 namespace uav_percept {
-  UAVPercept::UAVPercept(ros::NodeHandle node) {
+  UAVPercept::UAVPercept(ros::NodeHandle* node) {
     //Create viewable window - Image overlay output
     cv::namedWindow("Vision Output", WINDOW_AUTOSIZE);
 
@@ -10,25 +17,25 @@ namespace uav_percept {
     cv::startWindowThread(); 
 
     //Define source of image
-    image_transport::ImageTransport it(node); 
+    image_transport::ImageTransport it(*node); 
 
     //Image subscriber to "camera/image" topic
-    itSubscriber = it.subscribe("camera/image", 10, &UAVPercept::improCB, this); 
+    itSubscriber = it.subscribe("camera/image", 1000, &UAVPercept::improCB, this); 
 
     //VFR_HUD Subscriber
-    vfrHUDSubscriber = node.subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 10, &UAVPercept::vfrCB, this);
+    vfrHUDSubscriber = node->subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 1000, &UAVPercept::vfrCB, this);
 
     //GPS Subscriber
-    nsfSubscriber = node.subscribe<sensor_msgs::NavSatFix>("/mavros/global_position/global", 10, &UAVPercept::nsfCB, this);
+    nsfSubscriber = node->subscribe<sensor_msgs::NavSatFix>("/mavros/global_position/global", 1000, &UAVPercept::nsfCB, this);
 
     //Altitude Subscriber
-    altSubscriber = node.subscribe<std_msgs::Float64>("/mavros/global_position/rel_alt", 10, &UAVPercept::altCB, this); 
+    altSubscriber = node->subscribe<std_msgs::Float64>("/mavros/global_position/rel_alt", 1000, &UAVPercept::altCB, this); 
 
     //LapInfo Subscriber
-    lapInfoSubscriber = node.subscribe<uav_commander::lap_info>("/lap_info", 10, &UAVPercept::lapInfoCB, this); 
+    lapInfoSubscriber = node->subscribe<uav_commander::lap_info>("/lap_info", 1000, &UAVPercept::lapInfoCB, this); 
 
     //improInfo Subscriber
-    improInfoSubscriber = node.subscribe<uav_commander::impro_info>("/impro_info", 10, &UAVPercept::improInfoCB, this);
+    improInfoSubscriber = node->subscribe<uav_commander::impro_info>("/impro_info", 1000, &UAVPercept::improInfoCB, this);
   }
 
   UAVPercept::~UAVPercept() {}
@@ -55,22 +62,23 @@ namespace uav_percept {
 
 
   void UAVPercept::improCB(const sensor_msgs::ImageConstPtr& msg) {
-    if (lapInfo.lap_one.data) {
-      ROS_INFO("Lap 1 Completed");
-    }
+    // if (lapInfo.lap_one.data) {
+    //   ROS_INFO("Lap 1 Completed");
+    // }
 
-    if (lapInfo.lap_two.data) {
-      ROS_INFO("Lap 2 Completed");
-    }
+    // if (lapInfo.lap_two.data) {
+    //   ROS_INFO("Lap 2 Completed");
+    // }
 
-    if (lapInfo.lap_three.data) {
-      ROS_INFO("Lap 3 Completed");
-    }
+    // if (lapInfo.lap_three.data) {
+    //   ROS_INFO("Lap 3 Completed");
+    // }
 
     if (improInfo.impro_enabled.data) {
-      ROS_INFO("Impro Enabled");
-
+      // ROS_INFO("Impro Enabled");
       try {
+        // ROS_INFO("Random %d", rand());
+
         latRef = GPS.latitude * (pi/180); //Reference latitude (current latitude of aircraft)
         longRef = GPS.longitude * (pi/180); //Reference longitude (current longitude of aircraft)
         headingCurrent = vfrHUD.heading; //Current heading
@@ -103,11 +111,11 @@ namespace uav_percept {
         //Combine hue images for object recognition
         addWeighted(lower_hue, 1.0, upper_hue, 1.0, 0.0, hue_image); 
         
-        // Introduce interference
+        //Introduce interference
         //Introduce noise
         GaussianBlur(hue_image, hue_image, Size(9, 9), 2, 2); 
         
-        // Hough transform to detect circles
+        //Hough transform to detect circles
         //Detected circles array
         vector<Vec3f> circles;
         //HOUGH CIRCLE TRANSFORNATION
@@ -115,28 +123,35 @@ namespace uav_percept {
         // imshow("Original", orig_image);
         
 
-        // Highlight detected object
-        for(size_t cur = 0; cur < circles.size(); ++cur) {
-          //Define centre point of detected circle
-          Point center(circles[cur][0], circles[cur][1]);
-          //Define radius of detected circle
-          int radius = circles[cur][2]; 
-          
-          //Overlay detected cricle outline onto origional image
-          circle(orig_image, center, radius, Scalar(239, 152, 38), 2); 
+        if (circles.size() != 0) {
+          // // Highlight detected object
+          // for(size_t cur = 0; cur < circles.size(); ++cur) {
+          //   //Define centre point of detected circle
+          //   Point center(circles[cur][0], circles[cur][1]);
+          //   //Define radius of detected circle
+          //   int radius = circles[cur][2]; 
+            
+          //   //Overlay detected cricle outline onto origional image
+          //   circle(orig_image, center, radius, Scalar(239, 152, 38), 2); 
+            
+          //   //Display circle image overlay
+          //   cv::imshow("Vision Output", orig_image);
 
-          //allow for display of image for given milliseconds (Image overlay refreshrate)
-          waitKey(30);  
+          //   cv::imwrite("romi" + std::to_string(rand()) + ".jpg", orig_image);
+
+          //   //allow for display of image for given milliseconds (Image overlay refreshrate)
+          //   waitKey(30);  
+          // }
+
+          ROS_INFO("Red circle detected");
         }
 
         // if (circles.size() > 0) {
         //   ROS_INFO("Red Circles Detected");
         // }
 
-        //Display circle image overlay
-        imshow("Vision Output", orig_image);
         // Define image size
-        ROS_INFO("Size: (W) %i x (H) %i", orig_image.cols, orig_image.rows);
+        // ROS_INFO("Size: (W) %i x (H) %i", orig_image.cols, orig_image.rows);
 
         // Target Locating
         // Check if any circles were detected
@@ -177,7 +192,7 @@ namespace uav_percept {
             bearingDropZone = bearingDropZone + 360;
           }
 
-          GPS.position_covariance_type = 3; //Type of GPS frame reference (3 - Covariance known)
+          GPS.position_covariance_type = 2; //Type of GPS frame reference (3 - Covariance known)
           d = sqrt(pow(abs(xm), 2) + pow(abs(ym), 2)) / 1000; //magnitude of vector to target location in km
           R = 6378.1; //Radius of the Earth (km)
           bearing = bearingDropZone * pi/180; //Bearing upward (0 degrees -> radians)

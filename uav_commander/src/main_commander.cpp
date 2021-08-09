@@ -5,10 +5,10 @@
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "uav_commander_node");
 	ros::NodeHandle uav_commander_node;
-	ros::Rate rate(20.0);
+	ros::Rate rate(50.0);
 
 	//Initialize all publisher and subscriber in constructor
-	uav_commander::UAVCommander uavCommander(uav_commander_node);
+	uav_commander::UAVCommander uavCommander(&uav_commander_node);
 
 	//Wait for connection to be established between MAVROS and autopilot
 	while (ros::ok() && !uavCommander.currStateGlobal.connected) {
@@ -31,11 +31,10 @@ int main(int argc, char** argv) {
 	
 	ROS_INFO("========== STATUS ==========");
 
-	while (ros::ok) {
+	while (uav_commander_node.ok()) {
 		// uavCommander.infoWayReached();
 		uavCommander.isImproEnabled();
 
-		ros::Rate rate(20.0);
 		ros::spinOnce();
 		rate.sleep();
 	}

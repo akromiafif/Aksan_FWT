@@ -56,7 +56,7 @@ namespace uav_percept {
       uav_commander::impro_info improInfo;
       
     public:
-      UAVPercept(ros::NodeHandle node);
+      UAVPercept(ros::NodeHandle* node);
       ~UAVPercept();
 
       void improCB(const sensor_msgs::ImageConstPtr& msg);

@@ -7,27 +7,27 @@
 
 
 namespace uav_commander {
-  UAVCommander::UAVCommander(ros::NodeHandle node) {
+  UAVCommander::UAVCommander(ros::NodeHandle* node) {
     ROS_INFO("======= UAVCommander Initialize =======" );
 
     //Publishers (Transmits information to FCU)
-    localPosPublisher = node.advertise<geometry_msgs::PoseStamped>("/mavros/setpoint_position/local", 1000);
-    localVelPublisher = node.advertise<geometry_msgs::Twist>("/mavros/setpoint_velocity/cmd_vel_unstamped", 1000);
-    lapInfoPublisher = node.advertise<uav_commander::lap_info>("/lap_info", 1000);
-    improInfoPublisher = node.advertise<uav_commander::impro_info>("/impro_info", 1000);
+    localPosPublisher = node->advertise<geometry_msgs::PoseStamped>("/mavros/setpoint_position/local", 1000);
+    localVelPublisher = node->advertise<geometry_msgs::Twist>("/mavros/setpoint_velocity/cmd_vel_unstamped", 1000);
+    lapInfoPublisher = node->advertise<uav_commander::lap_info>("/lap_info", 1000);
+    improInfoPublisher = node->advertise<uav_commander::impro_info>("/impro_info", 1000);
 
     //Subscribers (Listens for information from FCU)
-    stateSubscriber = node.subscribe<mavros_msgs::State>("/mavros/state", 1000, &UAVCommander::stateCB, this);
-    waypointReachSubscriber = node.subscribe<mavros_msgs::WaypointReached>("/mavros/mission/reached", 1000, &UAVCommander::waypointReachedCB, this); // Listens for whether the aircraft reached the desired waypoint
-    vfrSubscriber = node.subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 1000, &UAVCommander::vfrCB, this); //Listens for aircraft variables
+    stateSubscriber = node->subscribe<mavros_msgs::State>("/mavros/state", 1000, &UAVCommander::stateCB, this);
+    waypointReachSubscriber = node->subscribe<mavros_msgs::WaypointReached>("/mavros/mission/reached", 1000, &UAVCommander::waypointReachedCB, this); // Listens for whether the aircraft reached the desired waypoint
+    vfrSubscriber = node->subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 1000, &UAVCommander::vfrCB, this); //Listens for aircraft variables
 
     //Services and Clients (Allows for functions to be defined and called, returning a booleean result as to the clients success at executing the service
     //Two members: request and response
-    armingClient = node.serviceClient<mavros_msgs::CommandBool>("/mavros/cmd/arming");
-    landClient = node.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/land");
-    setModeClient = node.serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
-    takeoffClient = node.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
-    commandClient = node.serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
+    armingClient = node->serviceClient<mavros_msgs::CommandBool>("/mavros/cmd/arming");
+    landClient = node->serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/land");
+    setModeClient = node->serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
+    takeoffClient = node->serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
+    commandClient = node->serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
 
     //OTW Meninggal
     ROS_INFO("======= UAVCommander Initialize Completed =======" );
@@ -49,6 +49,51 @@ namespace uav_commander {
   //Current flight controller variables (airspeed, heading, etc)
   void UAVCommander::vfrCB(const mavros_msgs::VFR_HUD::ConstPtr& msg) {
     vfrHUD = *msg;
+  }
+
+  //Set aircraft to AUTO mode
+  void UAVCommander::setAutoMissionMode() {
+    ROS_INFO(" ===== Auto Mission Mode ===== ");
+
+    mavros_msgs::SetMode srv_setMode;
+    mavros_msgs::SetMode::Request request;
+    mavros_msgs::SetMode::Response response;
+
+    request.base_mode = 0;
+    std::string mode = "AUTO.MISSION";
+    request.custom_mode = mode.c_str();
+
+    bool success = setModeClient.call(request, response);
+
+    if(success){
+      ROS_INFO("Auto Mission ON");
+    } else{ 
+      ROS_ERROR("Failed to Auto Mission");
+    }
+    ROS_INFO(" ===== Auto Mission Completed ===== ");
+
+      
+    // ros::Rate rate(20.0);
+    // ros::spinOnce();
+    // rate.sleep();
+
+    ROS_INFO(" ===== Auto Mission Mode Completed ===== ");
+    ROS_INFO("                                         ");
+  }
+
+  //Define flight linear velocity
+  void UAVCommander::setAirspeed(float airspeed) {
+    ROS_INFO(" ===== Set Airspeed ===== ");
+
+    geometry_msgs::Twist velocity;
+    velocity.linear.x = airspeed;
+    localVelPublisher.publish(velocity);
+
+    // ros::Rate rate(20.0);
+    // ros::spinOnce();
+    // rate.sleep();
+  
+    ROS_INFO(" ===== Set Airspeed Completed ===== ");
   }
 
   //Arming the aircraft
@@ -74,43 +119,24 @@ namespace uav_commander {
       ROS_INFO("Arming failed with %d", response.success);
     }
 
-    ros::Rate rate(20.0);
-    ros::spinOnce();
-    rate.sleep();
+    // ros::Rate rate(20.0);
+    // ros::spinOnce();
+    // rate.sleep();
 
     ROS_INFO(" ===== Arming Completed ===== ");
     ROS_INFO("                              ");
   }
 
-  //Set aircraft to AUTO mode
-  void UAVCommander::setAutoMissionMode() {
-    ROS_INFO(" ===== Auto Mission Mode ===== ");
 
-    mavros_msgs::SetMode srv_setMode;
-    mavros_msgs::SetMode::Request request;
-    mavros_msgs::SetMode::Response response;
 
-    request.base_mode = 0;
-    std::string mode = "AUTO.MISSION";
-    request.custom_mode = mode.c_str();
 
-    bool success = setModeClient.call(request, response);
 
-    if(success){
-      ROS_INFO("Auto Mission ON");
-    } else{ 
-      ROS_ERROR("Failed to Auto Mission");
-    }
-    ROS_INFO(" ===== Auto Mission Completed ===== ");
 
-      
-    ros::Rate rate(20.0);
-    ros::spinOnce();
-    rate.sleep();
 
-    ROS_INFO(" ===== Auto Mission Mode Completed ===== ");
-    ROS_INFO("                                         ");
-  }
+
+
+
+
 
   //Analize the data from aircraft
   void UAVCommander::infoWayReached() {
@@ -156,6 +182,10 @@ namespace uav_commander {
   void UAVCommander::isImproEnabled() {
     uav_commander::impro_info improInfo;
 
+    // if (currStateGlobal.mode == "AUTO.MISSION") {
+    //   ROS_INFO("Auto Activated");
+    // }
+
     // while(ros::ok) {
       if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
         improEnabled.data = true;
@@ -175,20 +205,7 @@ namespace uav_commander {
     // }
   }
 
-  //Define flight linear velocity
-  void UAVCommander::setAirspeed(float airspeed) {
-    ROS_INFO(" ===== Set Airspeed ===== ");
 
-    geometry_msgs::Twist velocity;
-    velocity.linear.x = airspeed;
-    localVelPublisher.publish(velocity);
-
-    ros::Rate rate(20.0);
-    ros::spinOnce();
-    rate.sleep();
-  
-    ROS_INFO(" ===== Set Airspeed Completed ===== ");
-  }
 
 
 
