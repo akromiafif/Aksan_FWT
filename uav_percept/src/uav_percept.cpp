@@ -19,7 +19,7 @@ namespace uav_percept {
     //Define source of image
     image_transport::ImageTransport it(*node); 
 
-    //Image subscriber to "camera/image" topic
+    // //Image subscriber to "camera/image" topic
     itSubscriber = it.subscribe("camera/image", 1000, &UAVPercept::improCB, this); 
 
     //VFR_HUD Subscriber
@@ -124,34 +124,34 @@ namespace uav_percept {
         
 
         if (circles.size() != 0) {
-          // // Highlight detected object
-          // for(size_t cur = 0; cur < circles.size(); ++cur) {
-          //   //Define centre point of detected circle
-          //   Point center(circles[cur][0], circles[cur][1]);
-          //   //Define radius of detected circle
-          //   int radius = circles[cur][2]; 
+          // Highlight detected object
+          for(size_t cur = 0; cur < circles.size(); ++cur) {
+            //Define centre point of detected circle
+            Point center(circles[cur][0], circles[cur][1]);
+            //Define radius of detected circle
+            int radius = circles[cur][2]; 
             
-          //   //Overlay detected cricle outline onto origional image
-          //   circle(orig_image, center, radius, Scalar(239, 152, 38), 2); 
+            //Overlay detected cricle outline onto origional image
+            circle(orig_image, center, radius, Scalar(239, 152, 38), 2); 
             
-          //   //Display circle image overlay
-          //   cv::imshow("Vision Output", orig_image);
+            //Display circle image overlay
+            cv::imshow("Vision Output", orig_image);
 
-          //   cv::imwrite("romi" + std::to_string(rand()) + ".jpg", orig_image);
+            // cv::imwrite("romi" + std::to_string(rand()) + ".jpg", orig_image);
 
-          //   //allow for display of image for given milliseconds (Image overlay refreshrate)
-          //   waitKey(30);  
-          // }
+            //allow for display of image for given milliseconds (Image overlay refreshrate)
+            waitKey(30);  
+          }
 
           ROS_INFO("Red circle detected");
         }
 
-        // if (circles.size() > 0) {
-        //   ROS_INFO("Red Circles Detected");
-        // }
+        if (circles.size() > 0) {
+          ROS_INFO("Red Circles Detected");
+        }
 
         // Define image size
-        // ROS_INFO("Size: (W) %i x (H) %i", orig_image.cols, orig_image.rows);
+        ROS_INFO("Size: (W) %i x (H) %i", orig_image.cols, orig_image.rows);
 
         // Target Locating
         // Check if any circles were detected

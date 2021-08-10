@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
 		// uavCommander.infoWayReached();
 		uavCommander.isImproEnabled();
 
-		ros::spinOnce();
-		rate.sleep();
+		// ros::spinOnce();
+		// rate.sleep();
 	}
 
 	ROS_INFO("========== STATUS ==========");

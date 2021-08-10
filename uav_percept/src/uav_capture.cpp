@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
     capture >> frame; 
 
     // if (!frame.empty()) {
-      // imshow("Video Original", frame);
+      //imshow("Video Original", frame);
       // writer << frame;
 
       // Save image frame by frame
