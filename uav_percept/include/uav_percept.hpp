@@ -1,21 +1,23 @@
 #include <ros/ros.h>
-#include <std_msgs/String.h> 
+
+// For OpenCV purpose
 #include <image_transport/image_transport.h> 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/opencv.hpp>
-#include <cv_bridge/cv_bridge.h> 
+#include <cv_bridge/cv_bridge.h>
+
+// For Telemetry data
 #include <mavros_msgs/Waypoint.h> 
 #include <mavros_msgs/WaypointPush.h>
 #include <mavros_msgs/VFR_HUD.h> 
 #include <sensor_msgs/NavSatFix.h> 
 #include <std_msgs/Float64.h>
 #include <math.h>
+#include <std_msgs/String.h> 
 
 //Custom message
 #include <uav_commander/lap_info.h>
 #include <uav_commander/impro_info.h>
-
-
 
 using namespace cv;
 using namespace ros;
@@ -24,6 +26,13 @@ using namespace mavros_msgs;
 using namespace sensor_msgs;
 
 namespace uav_percept {
+  // OpenCV Window Name for imshow
+  static const std::string OPENCV_WINDOW = "Vision Detected";
+
+  // Topics
+  static const std::string IMAGE_TOPIC = "/camera/image";
+
+
   class UAVPercept {
     public: 
       image_transport::Subscriber itSubscriber;
@@ -32,6 +41,12 @@ namespace uav_percept {
       ros::Subscriber altSubscriber;
       ros::Subscriber lapInfoSubscriber;
       ros::Subscriber improInfoSubscriber;
+      
+      // Save Lat Long variable
+      std::ofstream myfile;
+
+      // Save video variable
+      cv::VideoWriter writer;
 
       //Variables
       float bearingDropZone = 0; //Drop-zone Bearing

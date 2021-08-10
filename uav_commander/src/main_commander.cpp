@@ -5,7 +5,7 @@
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "uav_commander_node");
 	ros::NodeHandle uav_commander_node;
-	ros::Rate rate(50.0);
+	ros::Rate rate(30.0);
 
 	//Initialize all publisher and subscriber in constructor
 	uav_commander::UAVCommander uavCommander(&uav_commander_node);
@@ -19,15 +19,12 @@ int main(int argc, char** argv) {
 	// //Ensures the aircraft is disarmed and set to manual mode initially
 	// uavCommander.initializeManualMode();
 
-	// //Define flight velocity
-	// uavCommander.setAirspeed(20.0);
-
 	// //Defines desired aircraft flight mode and arms motors
 	// uavCommander.setFlightMode();
 
-	// uavCommander.setAutoMissionMode();
-	// uavCommander.setAirspeed(20.0);
-	// uavCommander.setArm();
+	uavCommander.setAutoMissionMode();
+	uavCommander.setAirspeed(20.0);
+	uavCommander.setArm();
 	
 	ROS_INFO("========== STATUS ==========");
 
@@ -35,8 +32,13 @@ int main(int argc, char** argv) {
 		// uavCommander.infoWayReached();
 		uavCommander.isImproEnabled();
 
-		// ros::spinOnce();
-		// rate.sleep();
+		ros::spinOnce();
+		rate.sleep();
+	}
+
+	if (uavCommander.currStateGlobal.armed) {
+		ROS_INFO("Zaenab in action");
+		ROS_INFO("Impro is set");
 	}
 
 	ROS_INFO("========== STATUS ==========");

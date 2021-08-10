@@ -3,25 +3,22 @@
     pkg="uav_percept"
     type="uav_capture"
     name="uav_capture"
-    output="screen"
+    output="log"
   />
 
   <node
     pkg="uav_percept"
     type="main_percept"
     name="main_percept"
-    output="screen"
+    output="log"
   />
 
-  <node
+  <!-- <node
     pkg="uav_commander"
     type="main_commander"
     name="main_commander"
     output="screen"
-  />
-
-  <!-- vim: set ft=xml noet : -->
-	<!-- example launch script for ArduPilot based FCU's -->
+  /> -->
 
 	<!-- <arg name="fcu_url" default="/dev/ttyACM0:115200" />
 	<arg name="gcs_url" default="" />

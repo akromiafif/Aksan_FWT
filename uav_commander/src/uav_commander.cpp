@@ -29,7 +29,6 @@ namespace uav_commander {
     takeoffClient = node->serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
     commandClient = node->serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
 
-    //OTW Meninggal
     ROS_INFO("======= UAVCommander Initialize Completed =======" );
     ROS_INFO("                                                 " );
   }
@@ -50,6 +49,58 @@ namespace uav_commander {
   void UAVCommander::vfrCB(const mavros_msgs::VFR_HUD::ConstPtr& msg) {
     vfrHUD = *msg;
   }
+
+
+  // Get the data from aircraft
+  void UAVCommander::infoWayReached() {
+    uav_commander::lap_info lapInfo;
+
+      if (WayReached.wp_seq == 3) {
+        lapOne.data = true;
+      } else {
+        lapOne.data = false;
+      }
+
+      if (WayReached.wp_seq == 7) {
+        lapTwo.data = true;
+      } else {
+        lapTwo.data = false;
+      }
+
+      if (WayReached.wp_seq == 11) {
+        lapThree.data = true;
+      } else {
+        lapThree.data = false;
+      }
+
+      lapInfo.lap_one = lapOne;
+      lapInfo.lap_two = lapTwo;
+      lapInfo.lap_three = lapThree;
+
+      lapInfoPublisher.publish(lapInfo);
+  }
+
+  // Check when is impro enabled or not
+  void UAVCommander::isImproEnabled() {
+    uav_commander::impro_info improInfo;
+
+    if (currStateGlobal.armed) {
+      if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
+        improEnabled.data = true;
+        improInfo.impro_enabled = improEnabled;
+      }
+
+      if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
+        improEnabled.data = false;
+        improInfo.impro_enabled = improEnabled;
+      }
+
+      improInfoPublisher.publish(improInfo);
+    }
+  }
+
+
+
 
   //Set aircraft to AUTO mode
   void UAVCommander::setAutoMissionMode() {
@@ -137,92 +188,38 @@ namespace uav_commander {
 
 
 
-
-  //Analize the data from aircraft
-  void UAVCommander::infoWayReached() {
-    uav_commander::lap_info lapInfo;
-
-    // while (ros::ok) {
-      // if (WayReached.wp_seq == 1) {
-      //   ROS_INFO("alt: %f", vfrHUD.altitude);
-      //   ROS_INFO("heading: %d", vfrHUD.heading);
-      //   ROS_INFO("WP: reached %d", WayReached.wp_seq);
-      // }
-
-      if (WayReached.wp_seq == 3) {
-        lapOne.data = true;
-      } else {
-        lapOne.data = false;
-      }
-
-      if (WayReached.wp_seq == 7) {
-        lapTwo.data = true;
-      } else {
-        lapTwo.data = false;
-      }
-
-      if (WayReached.wp_seq == 11) {
-        lapThree.data = true;
-      } else {
-        lapThree.data = false;
-      }
-
-      lapInfo.lap_one = lapOne;
-      lapInfo.lap_two = lapTwo;
-      lapInfo.lap_three = lapThree;
-
-      lapInfoPublisher.publish(lapInfo);
-
-    //   ros::Rate rate(20.0);
-    //   ros::spinOnce();
-    //   rate.sleep();
-    // }
-  }
-
-  void UAVCommander::isImproEnabled() {
-    uav_commander::impro_info improInfo;
-
-    if (currStateGlobal.mode == "AUTO.MISSION") {
-      if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
-        improEnabled.data = true;
-        improInfo.impro_enabled = improEnabled;
-      }
-
-      if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
-        improEnabled.data = false;
-        improInfo.impro_enabled = improEnabled;
-      }
-
-      improInfoPublisher.publish(improInfo);
-    }
-
-    // while(ros::ok) {
-
-
-    //   ros::Rate rate(20.0);
-    //   ros::spinOnce();
-    //   rate.sleep();
-    // }
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
 
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // void UAVCommander::initializeManualMode() {
   //   ROS_INFO(" ===== Initialize Manual Mode ===== ");
   //   ros::Rate rate(20.0); 

@@ -59,14 +59,6 @@ namespace uav_commander {
     public:
       UAVCommander(ros::NodeHandle* node);
       ~UAVCommander();
-      void setArm();
-      void setAutoMissionMode();
-      void setAirspeed(float airspeed);
-      
-      // void setTakeOff(int takeoffAlt);
-      // void setAutoLandMode(std::string mode);
-      // void loadMission();
-
 
       // Callback function
       void stateCB(const mavros_msgs::State::ConstPtr& msg);
@@ -75,6 +67,15 @@ namespace uav_commander {
 
       void infoWayReached();
       void isImproEnabled();
+
+      
+      void setArm();
+      void setAutoMissionMode();
+      void setAirspeed(float airspeed);
+      
+      // void setTakeOff(int takeoffAlt);
+      // void setAutoLandMode(std::string mode);
+      // void loadMission();
 
       // void initializeManualMode();
       // void setFlightMode();
