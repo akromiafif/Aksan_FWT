@@ -182,11 +182,7 @@ namespace uav_commander {
   void UAVCommander::isImproEnabled() {
     uav_commander::impro_info improInfo;
 
-    // if (currStateGlobal.mode == "AUTO.MISSION") {
-    //   ROS_INFO("Auto Activated");
-    // }
-
-    // while(ros::ok) {
+    if (currStateGlobal.mode == "AUTO.MISSION") {
       if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
         improEnabled.data = true;
         improInfo.impro_enabled = improEnabled;
@@ -198,6 +194,10 @@ namespace uav_commander {
       }
 
       improInfoPublisher.publish(improInfo);
+    }
+
+    // while(ros::ok) {
+
 
     //   ros::Rate rate(20.0);
     //   ros::spinOnce();

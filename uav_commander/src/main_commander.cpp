@@ -25,9 +25,9 @@ int main(int argc, char** argv) {
 	// //Defines desired aircraft flight mode and arms motors
 	// uavCommander.setFlightMode();
 
-	uavCommander.setAutoMissionMode();
-	uavCommander.setAirspeed(20.0);
-	uavCommander.setArm();
+	// uavCommander.setAutoMissionMode();
+	// uavCommander.setAirspeed(20.0);
+	// uavCommander.setArm();
 	
 	ROS_INFO("========== STATUS ==========");
 
