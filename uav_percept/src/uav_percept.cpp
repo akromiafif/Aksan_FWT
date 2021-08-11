@@ -25,8 +25,8 @@ namespace uav_percept {
 
     // VARIABLE BUAT SIMPEN VIDEO
     cv::Size size(
-      (int) 640,
-      (int) 360
+      (int) 176,
+      (int) 144
     );
 
     writer.open("vision_detected.avi", VideoWriter::fourcc('M','J','P','G'), 30, size);
@@ -96,7 +96,6 @@ namespace uav_percept {
     // }
 
     if (improInfo.impro_enabled.data) {
-      // ROS_INFO("Impro Enabled");
       try {
         cv_ptr = cv_bridge::toCvCopy(msg, enc::BGR8);
 
@@ -144,7 +143,7 @@ namespace uav_percept {
         vector<Vec3f> circles;
 
         //HOUGH CIRCLE TRANSFORNATION
-        HoughCircles(hue_image, circles, CV_HOUGH_GRADIENT, 1, hue_image.rows/8, 100, 25, 0, 0); 
+        cv::HoughCircles(hue_image, circles, CV_HOUGH_GRADIENT, 1, hue_image.rows/8, 100, 25, 1, 30); 
         // imshow("Original", orig_image);
         
 
@@ -158,13 +157,13 @@ namespace uav_percept {
           //Overlay detected cricle outline onto origional image
           circle(orig_image, center, radius, Scalar(239, 152, 38), 2); 
           
-          // DISABLE KALO MODE FLIGHT
-          cv::imshow(OPENCV_WINDOW, orig_image);
-          // DISABLE KALO MODE FLIGHT
-          
           //allow for display of image for given milliseconds (Image overlay refreshrate)
           waitKey(10);  
         }
+
+        // DISABLE KALO MODE FLIGHT
+        cv::imshow(OPENCV_WINDOW, orig_image);
+        // DISABLE KALO MODE FLIGHT
 
         if (circles.size() != 0) {
           if (myfile.is_open()) {
@@ -231,7 +230,6 @@ namespace uav_percept {
           ROS_INFO("bearing: %f", bearingDropZone); //Bearing
           ROS_INFO("altitude: %f", altCurrent);
           ROS_INFO("Red circle detected");
-
         }
 
         // Define image size

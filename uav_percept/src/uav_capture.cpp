@@ -26,10 +26,10 @@ int main(int argc, char** argv) {
   ros::NodeHandle node;
   image_transport::ImageTransport it(node); 
   image_transport::Publisher itPublisher = it.advertise(IMAGE_TOPIC, 1);
-  cv::VideoCapture capture(4);
+  cv::VideoCapture capture(0, cv::CAP_V4L2);
 
-  capture.set(cv::CAP_PROP_FRAME_WIDTH, 640);
-  capture.set(cv::CAP_PROP_FRAME_HEIGHT, 360);
+  capture.set(cv::CAP_PROP_FRAME_WIDTH, 176);
+  capture.set(cv::CAP_PROP_FRAME_HEIGHT, 144);
 
   sensor_msgs::ImagePtr msg;
 
@@ -45,12 +45,12 @@ int main(int argc, char** argv) {
 
   // BUAT SIMPEN VIDEO
   cv::Size size(
-    (int) 640,
-    (int) 360
+    (int) 176,
+    (int) 144
   );
 
   cv::VideoWriter writer;
-  writer.open("vision_original.avi", VideoWriter::fourcc('M','J','P','G'), fps, size);
+  writer.open("vision_original.avi", VideoWriter::fourcc('M','J','P','G'), 30, size);
   // BUAT SIMPEN VIDEO
 
   cv::Mat frame; 

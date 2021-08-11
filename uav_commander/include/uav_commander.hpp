@@ -68,16 +68,8 @@ namespace uav_commander {
       void infoWayReached();
       void isImproEnabled();
 
-      
       void setArm();
       void setAutoMissionMode();
       void setAirspeed(float airspeed);
-      
-      // void setTakeOff(int takeoffAlt);
-      // void setAutoLandMode(std::string mode);
-      // void loadMission();
-
-      // void initializeManualMode();
-      // void setFlightMode();
   };
 }
