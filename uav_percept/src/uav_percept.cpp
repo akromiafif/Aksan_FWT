@@ -29,6 +29,8 @@ namespace uav_percept {
       (int) 144
     );
 
+    counter = 0;
+
     writer.open("vision_detected.avi", VideoWriter::fourcc('M','J','P','G'), 30, size);
     // VARIABLE BUAT SIMPEN VIDEO
 
@@ -96,6 +98,9 @@ namespace uav_percept {
     // }
 
     if (improInfo.impro_enabled.data) {
+
+      latlong.open("latlong_frame_" + std::to_string(counter));
+
       try {
         cv_ptr = cv_bridge::toCvCopy(msg, enc::BGR8);
 
@@ -166,13 +171,6 @@ namespace uav_percept {
         // DISABLE KALO MODE FLIGHT
 
         if (circles.size() != 0) {
-          if (myfile.is_open()) {
-            // myfile << "Hello World from OpenCV \n";
-            myfile << "LatRef: " + std::to_string(latRef) + " | LongRef: " + std::to_string(longRef) + " \n";
-
-            myfile.close();
-          }
-
           writer << orig_image;
 
           //Target bearing
@@ -222,14 +220,25 @@ namespace uav_percept {
           // Display target details deduced
           ROS_INFO("Lat: %f", x_lat); //Target latitude
           ROS_INFO("Long: %f", y_long); //Target Longitude
-          ROS_INFO("LatRef: %f", latRef); //Reference latitude
-          ROS_INFO("LongRef: %f", longRef); //Reference longitude
+          ROS_INFO("LatRef: %f", x_lat); //Reference latitude
+          ROS_INFO("LongRef: %f", y_long); //Reference longitude
           ROS_INFO("xm: %f", xm); //X axis displacement (km)
           ROS_INFO("ym: %f", ym); //Y axis displacment (km)
           ROS_INFO("displacement: %f", d); //Total displacment (km)
           ROS_INFO("bearing: %f", bearingDropZone); //Bearing
           ROS_INFO("altitude: %f", altCurrent);
           ROS_INFO("Red circle detected");
+
+          if (myfile.is_open() || latlong.is_open()) {
+            // myfile << "Hello World from OpenCV \n";
+            myfile << "LatRef: " + std::to_string(x_lat) + " | LongRef: " + std::to_string(y_long) + " \n";
+
+            latlong << "CurrLatRef: " + std::to_string(GPS.latitude) + " | CurrLongRef: " + std::to_string(GPS.longitude) + " \n";
+
+            counter++;
+            latlong.close();
+            myfile.close();
+          }
         }
 
         // Define image size

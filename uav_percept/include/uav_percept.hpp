@@ -45,8 +45,14 @@ namespace uav_percept {
       // Save Lat Long variable
       std::ofstream myfile;
 
+      // Save current aircraft lat, long coordinate
+      std::ofstream latlong;
+
       // Save video variable
       cv::VideoWriter writer;
+
+      // lat long counter
+      int counter;
 
       //Variables
       float bearingDropZone = 0; //Drop-zone Bearing
