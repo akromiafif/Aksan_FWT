@@ -35,7 +35,7 @@ namespace uav_percept {
     // VARIABLE BUAT SIMPEN VIDEO
 
     // VARIABLE BUAT SIMPEN Lat Long
-    myfile.open ("latlong.txt");
+    latLongDroppingZone.open ("latLongDropZone.txt");
     // VARIABLE BUAT SIMPEN Lat Long
 
     // //Image subscriber to /camera/image topic
@@ -99,7 +99,7 @@ namespace uav_percept {
 
     if (improInfo.impro_enabled.data) {
 
-      latlong.open("latlong_frame_" + std::to_string(counter));
+      latLongAircraft.open("latLongAircraft" + std::to_string(counter));
 
       try {
         cv_ptr = cv_bridge::toCvCopy(msg, enc::BGR8);
@@ -229,15 +229,15 @@ namespace uav_percept {
           ROS_INFO("altitude: %f", altCurrent);
           ROS_INFO("Red circle detected");
 
-          if (myfile.is_open() || latlong.is_open()) {
-            // myfile << "Hello World from OpenCV \n";
-            myfile << "LatRef: " + std::to_string(x_lat) + " | LongRef: " + std::to_string(y_long) + " \n";
+          if (latLongDroppingZone.is_open() || latLongAircraft.is_open()) {
+            // latLongDroppingZone << "Hello World from OpenCV \n";
+            latLongDroppingZone << "LatDropZone: " + std::to_string(x_lat) + " | LongDropZone: " + std::to_string(y_long) + " \n";
 
-            latlong << "CurrLatRef: " + std::to_string(GPS.latitude) + " | CurrLongRef: " + std::to_string(GPS.longitude) + " \n";
+            latLongAircraft << "LatAircraft: " + std::to_string(GPS.latitude) + " | LongAircraft: " + std::to_string(GPS.longitude) + " \n";
 
             counter++;
-            latlong.close();
-            myfile.close();
+            latLongAircraft.close();
+            latLongDroppingZone.close();
           }
         }
 
@@ -250,4 +250,3 @@ namespace uav_percept {
     }
   }
 }
-

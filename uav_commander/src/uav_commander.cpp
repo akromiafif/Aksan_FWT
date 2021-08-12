@@ -85,20 +85,33 @@ namespace uav_commander {
   // Check when is impro enabled or not
   void UAVCommander::isImproEnabled() {
     uav_commander::impro_info improInfo;
-
+    
     if (currStateGlobal.armed) {
-      if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
+      // DISABLE KALO TEST FLIGHT
+      // if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
+      //   improEnabled.data = true;
+      //   improInfo.impro_enabled = improEnabled;
+      // }
+
+      // if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
+      //   improEnabled.data = false;
+      //   improInfo.impro_enabled = improEnabled;
+      // }
+      // DISABLE KALO TEST FLIGHT
+
+      if (WayReached.wp_seq == 2) {
         improEnabled.data = true;
         improInfo.impro_enabled = improEnabled;
       }
 
-      if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
+      if (WayReached.wp_seq == 3) {
         improEnabled.data = false;
         improInfo.impro_enabled = improEnabled;
       }
 
       improInfoPublisher.publish(improInfo);
     }
+    
   }
 
 

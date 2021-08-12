@@ -43,10 +43,10 @@ namespace uav_percept {
       ros::Subscriber improInfoSubscriber;
       
       // Save Lat Long variable
-      std::ofstream myfile;
+      std::ofstream latLongAircraft;
 
       // Save current aircraft lat, long coordinate
-      std::ofstream latlong;
+      std::ofstream latLongDroppingZone;
 
       // Save video variable
       cv::VideoWriter writer;

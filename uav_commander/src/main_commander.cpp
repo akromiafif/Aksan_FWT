@@ -16,21 +16,15 @@ int main(int argc, char** argv) {
 		rate.sleep();
 	}
 
-	uavCommander.setAutoMissionMode();
-	uavCommander.setAirspeed(20.0);
-	uavCommander.setArm();
+	// DISABLE KALO TEST FLIGHT
+	// uavCommander.setAutoMissionMode();
+	// uavCommander.setAirspeed(20.0);
+	// uavCommander.setArm();
+	// DISABLE KALO TEST FLIGHT
 	
 	ROS_INFO("========== STATUS ==========");
-
-	if (uavCommander.currStateGlobal.armed) {
-		ROS_INFO("Zaenab in action");
-		ROS_INFO("Impro is set");
-	} else {
-		ROS_INFO("Zaenab not running");
-	}
-
 	while (uav_commander_node.ok()) {
-		uavCommander.infoWayReached();
+		//uavCommander.infoWayReached();
 		uavCommander.isImproEnabled();
 
 		ros::spinOnce();
