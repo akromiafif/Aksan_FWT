@@ -28,8 +28,8 @@ int main(int argc, char** argv) {
   image_transport::Publisher itPublisher = it.advertise(IMAGE_TOPIC, 1);
   cv::VideoCapture capture(0, cv::CAP_V4L2);
 
-  capture.set(cv::CAP_PROP_FRAME_WIDTH, 176);
-  capture.set(cv::CAP_PROP_FRAME_HEIGHT, 144);
+  capture.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+  capture.set(cv::CAP_PROP_FRAME_HEIGHT, 360);
 
   sensor_msgs::ImagePtr msg;
 
@@ -45,8 +45,8 @@ int main(int argc, char** argv) {
 
   // BUAT SIMPEN VIDEO
   cv::Size size(
-    (int) 176,
-    (int) 144
+    (int) 640,
+    (int) 360
   );
 
   cv::VideoWriter writer;
@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
     capture >> frame; 
 
     // DISABLE KALO MODE FLIGHT
-    imshow(OPENCV_WINDOW, frame);
+    //imshow(OPENCV_WINDOW, frame);
     writer << frame;
     // DISABLE KALO MODE FLIGHT
 

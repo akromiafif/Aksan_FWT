@@ -77,8 +77,6 @@ namespace uav_commander {
       lapInfo.lap_two = lapTwo;
       lapInfo.lap_three = lapThree;
 
-      ROS_INFO("Waypoint %d reached", WayReached.wp_seq);
-
       lapInfoPublisher.publish(lapInfo);
   }
 
@@ -111,7 +109,6 @@ namespace uav_commander {
 
       improInfoPublisher.publish(improInfo);
     }
-    
   }
 
 

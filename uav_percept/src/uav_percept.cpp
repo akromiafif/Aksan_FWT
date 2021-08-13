@@ -25,8 +25,8 @@ namespace uav_percept {
 
     // VARIABLE BUAT SIMPEN VIDEO
     cv::Size size(
-      (int) 176,
-      (int) 144
+      (int) 640,
+      (int) 360
     );
 
     counter = 0;
@@ -99,7 +99,7 @@ namespace uav_percept {
 
     if (improInfo.impro_enabled.data) {
 
-      latLongAircraft.open("latLongAircraft" + std::to_string(counter));
+      latLongAircraft.open("latLongAircraft_" + std::to_string(counter) + std::string(".txt"));
 
       try {
         cv_ptr = cv_bridge::toCvCopy(msg, enc::BGR8);
@@ -148,7 +148,7 @@ namespace uav_percept {
         vector<Vec3f> circles;
 
         //HOUGH CIRCLE TRANSFORNATION
-        cv::HoughCircles(hue_image, circles, CV_HOUGH_GRADIENT, 1, hue_image.rows/8, 100, 25, 1, 30); 
+        cv::HoughCircles(hue_image, circles, CV_HOUGH_GRADIENT, 1, hue_image.rows/16, 100, 25, 1, 100); 
         // imshow("Original", orig_image);
         
 
@@ -167,12 +167,12 @@ namespace uav_percept {
         }
 
         // DISABLE KALO MODE FLIGHT
-        cv::imshow(OPENCV_WINDOW, orig_image);
+        // cv::imshow(OPENCV_WINDOW, orig_image);
         // DISABLE KALO MODE FLIGHT
 
-        if (circles.size() != 0) {
-          writer << orig_image;
+        writer << orig_image;
 
+        if (circles.size() != 0) {
           //Target bearing
           bearingDropZone = 0;
           x = circles[0][0] - (orig_image.cols / 2); //x pixel coordinate
