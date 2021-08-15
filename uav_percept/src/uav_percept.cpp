@@ -35,7 +35,7 @@ namespace uav_percept {
     // VARIABLE BUAT SIMPEN VIDEO
 
     // VARIABLE BUAT SIMPEN Lat Long
-    latLongDroppingZone.open ("latLongDropZone.txt");
+    latLongDroppingZone.open("latLongDropZone.txt");
     // VARIABLE BUAT SIMPEN Lat Long
 
     // //Image subscriber to /camera/image topic
@@ -148,7 +148,7 @@ namespace uav_percept {
         vector<Vec3f> circles;
 
         //HOUGH CIRCLE TRANSFORNATION
-        cv::HoughCircles(hue_image, circles, CV_HOUGH_GRADIENT, 1, hue_image.rows/16, 100, 25, 1, 100); 
+        cv::HoughCircles(hue_image, circles, CV_HOUGH_GRADIENT, 1, hue_image.rows/4, 100, 25, 1, 100); 
         // imshow("Original", orig_image);
         
 
@@ -218,10 +218,10 @@ namespace uav_percept {
           float y_long = (longRef + atan2(sin(bearing)*sin(d/R)*cos(latRef), cos(d/R) - sin(latRef)*sin(x_lat))) * (180/pi); //Target Longitude
           
           // Display target details deduced
-          ROS_INFO("Lat: %f", x_lat); //Target latitude
-          ROS_INFO("Long: %f", y_long); //Target Longitude
-          ROS_INFO("LatRef: %f", x_lat); //Reference latitude
-          ROS_INFO("LongRef: %f", y_long); //Reference longitude
+          ROS_INFO("LatDropZone: %f", x_lat); //Target latitude
+          ROS_INFO("LongDropZone: %f", y_long); //Target Longitude
+          ROS_INFO("LatAircraft: %f", GPS.altitude); //Reference latitude
+          ROS_INFO("LongAircraft: %f", GPS.longitude); //Reference longitude
           ROS_INFO("xm: %f", xm); //X axis displacement (km)
           ROS_INFO("ym: %f", ym); //Y axis displacment (km)
           ROS_INFO("displacement: %f", d); //Total displacment (km)
