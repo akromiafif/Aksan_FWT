@@ -26,7 +26,10 @@ int main(int argc, char** argv) {
   ros::NodeHandle node;
   image_transport::ImageTransport it(node); 
   image_transport::Publisher itPublisher = it.advertise(IMAGE_TOPIC, 1);
+
+  // GANTI INDEX KE 0 KALO MODE FLIGHT
   cv::VideoCapture capture(0, cv::CAP_V4L2);
+  // GANTI INDEX KE 0 KALO MODE FLIGHT
 
   capture.set(cv::CAP_PROP_FRAME_WIDTH, 640);
   capture.set(cv::CAP_PROP_FRAME_HEIGHT, 360);

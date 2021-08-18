@@ -240,10 +240,6 @@ namespace uav_percept {
             latLongDroppingZone.close();
           }
         }
-
-        // Define image size
-        // ROS_INFO("Size: (W) %i x (H) %i", orig_image.cols, orig_image.rows);
-
       } catch (cv_bridge::Exception& e) {
         ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
       }
