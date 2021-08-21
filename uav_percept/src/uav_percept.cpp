@@ -146,7 +146,7 @@ namespace uav_percept {
         
         //Introduce interference
         //Introduce noise
-        cv::GaussianBlur(hue_image, hue_image, Size(9, 9), 2, 2); 
+        cv::GaussianBlur(hue_image, hue_image, Size(9, 9), 2, 2);
 
         //HOUGH CIRCLE TRANSFORNATION
         cv::HoughCircles(hue_image, circles, CV_HOUGH_GRADIENT, 1, hue_image.rows/4, 100, 25, 1, 100); 

@@ -63,8 +63,8 @@ int main(int argc, char** argv) {
     capture >> frame; 
 
     // DISABLE KALO MODE FLIGHT
-    // imshow(OPENCV_WINDOW, frame);
-    writer << frame;
+    imshow(OPENCV_WINDOW, frame);
+    // writer << frame;
     // DISABLE KALO MODE FLIGHT
 
     msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
