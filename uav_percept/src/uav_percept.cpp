@@ -135,10 +135,10 @@ namespace uav_percept {
         Mat upper_hue;
 
         //Lower hue threshold range
-        inRange(HSV, Scalar(0, 100, 100), Scalar(10, 255, 255), lower_hue); 
+        inRange(HSV, Scalar(0, 170, 160), Scalar(10, 255, 255), lower_hue); 
 
         //Upper hue threshold range
-        inRange(HSV, Scalar(165, 100, 100), Scalar(179, 255, 255), upper_hue); 
+        inRange(HSV, Scalar(165, 100, 100), Scalar(180, 255, 255), upper_hue); 
         
         // Combine the above two images
         Mat hue_image;
