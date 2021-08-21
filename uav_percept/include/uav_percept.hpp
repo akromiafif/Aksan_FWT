@@ -48,6 +48,8 @@ namespace uav_percept {
       // Save current aircraft lat, long coordinate
       std::ofstream latLongDroppingZone;
 
+      std::ofstream testWrite;
+
       // Save video variable
       cv::VideoWriter writer;
 

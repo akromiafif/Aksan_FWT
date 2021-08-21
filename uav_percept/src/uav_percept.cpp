@@ -101,6 +101,8 @@ namespace uav_percept {
 
       latLongAircraft.open("latLongAircraft_" + std::to_string(counter) + std::string(".txt"));
 
+      testWrite.open("testWrite.txt");
+
       try {
         cv_ptr = cv_bridge::toCvCopy(msg, enc::BGR8);
 
@@ -149,7 +151,7 @@ namespace uav_percept {
         cv::GaussianBlur(hue_image, hue_image, Size(9, 9), 2, 2);
 
         //HOUGH CIRCLE TRANSFORNATION
-        cv::HoughCircles(hue_image, circles, CV_HOUGH_GRADIENT, 1, hue_image.rows/4, 100, 25, 1, 100); 
+        cv::HoughCircles(hue_image, circles, CV_HOUGH_GRADIENT, 1, hue_image.rows/4, 100, 25, 25, 100); 
         // imshow("Original", orig_image);
         // CUSTOM FOR RED RANGE //
 
@@ -160,7 +162,7 @@ namespace uav_percept {
 
         cv::GaussianBlur(lower_pink, lower_pink, Size(9, 9), 2, 2);
 
-        cv::HoughCircles(lower_pink, circles, CV_HOUGH_GRADIENT, 1, lower_pink.rows/4, 100, 25, 50, 100); 
+        cv::HoughCircles(lower_pink, circles, CV_HOUGH_GRADIENT, 1, lower_pink.rows/4, 100, 25, 25, 100); 
         // ============== CUSTOM FOR PINK RANGE ============== //
         
 
@@ -240,6 +242,9 @@ namespace uav_percept {
           ROS_INFO("bearing: %f", bearingDropZone); //Bearing
           ROS_INFO("altitude: %f", altCurrent);
           ROS_INFO("Red circle detected");
+
+          testWrite << "Hello from testWrite" << "\n";
+          testWrite.close();
 
           if (latLongDroppingZone.is_open() || latLongAircraft.is_open()) {
             // latLongDroppingZone << "Hello World from OpenCV \n";
