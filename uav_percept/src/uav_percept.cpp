@@ -122,7 +122,12 @@ namespace uav_percept {
         Mat HSV;
         //Convert BGR image to HSV image
         cvtColor(BGR, HSV, COLOR_BGR2HSV); 
-        
+
+        //Hough transform to detect circles
+        //Detected circles array
+        vector<Vec3f> circles;
+
+        // CUSTOM FOR RED RANGE //
         // Threshold the HSV image, keep only the red pixels
         Mat lower_hue;
         Mat upper_hue;
@@ -142,14 +147,21 @@ namespace uav_percept {
         //Introduce interference
         //Introduce noise
         cv::GaussianBlur(hue_image, hue_image, Size(9, 9), 2, 2); 
-        
-        //Hough transform to detect circles
-        //Detected circles array
-        vector<Vec3f> circles;
 
         //HOUGH CIRCLE TRANSFORNATION
         cv::HoughCircles(hue_image, circles, CV_HOUGH_GRADIENT, 1, hue_image.rows/4, 100, 25, 1, 100); 
         // imshow("Original", orig_image);
+        // CUSTOM FOR RED RANGE //
+
+        // ============== CUSTOM FOR PINK RANGE ============== //
+        Mat lower_pink;
+
+        cv::inRange(HSV, cv::Scalar(135, 40, 160), cv::Scalar(160, 255, 255), lower_pink);
+
+        cv::GaussianBlur(lower_pink, lower_pink, Size(9, 9), 2, 2);
+
+        cv::HoughCircles(lower_pink, circles, CV_HOUGH_GRADIENT, 1, lower_pink.rows/4, 100, 25, 50, 100); 
+        // ============== CUSTOM FOR PINK RANGE ============== //
         
 
         // Highlight detected object

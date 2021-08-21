@@ -97,12 +97,12 @@ namespace uav_commander {
       // }
       // DISABLE KALO TEST FLIGHT
 
-      if (WayReached.wp_seq == 2) {
+      if (WayReached.wp_seq == 3) {
         improEnabled.data = true;
         improInfo.impro_enabled = improEnabled;
       }
 
-      if (WayReached.wp_seq == 3) {
+      if (WayReached.wp_seq == 4) {
         improEnabled.data = false;
         improInfo.impro_enabled = improEnabled;
       }
