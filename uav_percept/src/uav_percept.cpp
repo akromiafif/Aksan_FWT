@@ -191,8 +191,11 @@ namespace uav_percept {
           bearingDropZone = 0;
           x = circles[0][0] - (orig_image.cols / 2); //x pixel coordinate
           y = circles[0][1] - (orig_image.rows / 2); //y pixel coordinate
-          xm = (abs(x)/(orig_image.cols/2)) * (altCurrent*tan(pi/6)); //x displacement in meters
-          ym = (abs(y)/(orig_image.rows/2)) * (altCurrent*tan(pi/8)); //y displacement in meters
+          // xm = (abs(x)/(orig_image.cols/2)) * (altCurrent*tan(pi/6)); //x displacement in meters
+          // ym = (abs(y)/(orig_image.rows/2)) * (altCurrent*tan(pi/8)); //y displacement in meters
+
+          xm = (abs(x)/(orig_image.cols/2)) * (altCurrent*tan(53.13010236)); //x displacement in meters
+          ym = (abs(y)/(orig_image.rows/2)) * (altCurrent*tan(33.3985)); //y displacement in meters
 
           /* Region designation - (0,0) in top-left corner of 2
           2|1
