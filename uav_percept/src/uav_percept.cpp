@@ -247,7 +247,6 @@ namespace uav_percept {
           testWrite.close();
 
           if (latLongDroppingZone.is_open() || latLongAircraft.is_open()) {
-            // latLongDroppingZone << "Hello World from OpenCV \n";
             latLongDroppingZone << "LatDropZone: " + std::to_string(x_lat) + " | LongDropZone: " + std::to_string(y_long) + " \n";
 
             latLongAircraft << "LatAircraft: " + std::to_string(GPS.latitude) + " | LongAircraft: " + std::to_string(GPS.longitude) + " \n";
