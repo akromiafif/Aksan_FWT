@@ -17,7 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   uav_commander
 )
 
-find_package(OpenCV 4.2 REQUIRED)
+find_package(OpenCV 4.5.3 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)

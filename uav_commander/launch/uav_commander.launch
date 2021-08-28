@@ -1,10 +1,10 @@
 <launch>
-  <!-- <node
+  <node
     pkg="uav_commander"
     type="main_commander"
     name="main_commander"
     output="screen"
-  /> -->
+  />
   
   <arg name="fcu_url" default="/dev/ttyACM0:115200" />
 	<arg name="gcs_url" default="" />

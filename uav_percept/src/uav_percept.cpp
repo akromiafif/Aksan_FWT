@@ -194,8 +194,8 @@ namespace uav_percept {
           // xm = (abs(x)/(orig_image.cols/2)) * (altCurrent*tan(pi/6)); //x displacement in meters
           // ym = (abs(y)/(orig_image.rows/2)) * (altCurrent*tan(pi/8)); //y displacement in meters
 
-          xm = (abs(x)/(orig_image.cols/2)) * (altCurrent*tan(53.13010236)); //x displacement in meters
-          ym = (abs(y)/(orig_image.rows/2)) * (altCurrent*tan(33.3985)); //y displacement in meters
+          xm = (abs(x)/(orig_image.cols/2)) * (altCurrent*tan(0.92729521810131)); //x displacement in meters
+          ym = (abs(y)/(orig_image.rows/2)) * (altCurrent*tan(0.5829137902)); //y displacement in meters
 
           /* Region designation - (0,0) in top-left corner of 2
           2|1

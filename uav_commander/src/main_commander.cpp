@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 	ROS_INFO("========== STATUS ==========");
 	while (uav_commander_node.ok()) {
 		//uavCommander.infoWayReached();
-		//uavCommander.isImproEnabled();
+		uavCommander.isImproEnabled();
 
 		ros::spinOnce();
 		rate.sleep();
