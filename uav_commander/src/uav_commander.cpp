@@ -111,6 +111,23 @@ namespace uav_commander {
     }
   }
 
+  void UAVCommander::dropPayload() {
+    ros::Rate rate(30.0);
+
+    mavros_msgs::CommandLong srv;
+    srv.request.command = 183;	// See https://mavlink.io/en/messages/common.html#MAV_CMD_DO_SET_SERVO
+    srv.request.param1 = 8;
+    srv.request.param2 = 2200;
+
+    bool succeed = commandClient.call(srv);
+
+    if (succeed) {
+      ROS_INFO("Payload Dropped");
+    }
+
+    ros::spinOnce();
+		rate.sleep();
+  }
 
 
 

@@ -71,5 +71,7 @@ namespace uav_commander {
       void setArm();
       void setAutoMissionMode();
       void setAirspeed(float airspeed);
+
+      void dropPayload();
   };
 }

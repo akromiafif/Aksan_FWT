@@ -21,11 +21,12 @@ int main(int argc, char** argv) {
 	// uavCommander.setAirspeed(20.0);
 	// uavCommander.setArm();
 	// DISABLE KALO TEST FLIGHT
-	
+
+	uavCommander.dropPayload();
 	ROS_INFO("========== STATUS ==========");
 	while (uav_commander_node.ok()) {
 		//uavCommander.infoWayReached();
-		uavCommander.isImproEnabled();
+		//uavCommander.isImproEnabled();
 
 		ros::spinOnce();
 		rate.sleep();
