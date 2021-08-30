@@ -17,15 +17,15 @@ int main(int argc, char** argv) {
 	}
 
 	// DISABLE KALO TEST FLIGHT
-	// uavCommander.setAutoMissionMode();
-	// uavCommander.setAirspeed(20.0);
-	// uavCommander.setArm();
+	uavCommander.setAutoMissionMode();
+	uavCommander.setAirspeed(20.0);
+	uavCommander.setArm();
 	// DISABLE KALO TEST FLIGHT
 
-	uavCommander.dropPayload();
+	// uavCommander.dropPayload();
 	ROS_INFO("========== STATUS ==========");
 	while (uav_commander_node.ok()) {
-		//uavCommander.infoWayReached();
+		uavCommander.infoWayReached();
 		uavCommander.isImproEnabled();
 
 		ros::spinOnce();

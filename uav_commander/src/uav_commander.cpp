@@ -55,22 +55,18 @@ namespace uav_commander {
   void UAVCommander::infoWayReached() {
     uav_commander::lap_info lapInfo;
 
-      if (WayReached.wp_seq == 3) {
+      if (WayReached.wp_seq == 1) {
         lapOne.data = true;
-      } else {
+      }
+
+      if (WayReached.wp_seq == 5) {
+        lapTwo.data = true;
         lapOne.data = false;
       }
 
-      if (WayReached.wp_seq == 7) {
-        lapTwo.data = true;
-      } else {
-        lapTwo.data = false;
-      }
-
-      if (WayReached.wp_seq == 11) {
+      if (WayReached.wp_seq == 9) {
         lapThree.data = true;
-      } else {
-        lapThree.data = false;
+        lapTwo.data = false;
       }
 
       lapInfo.lap_one = lapOne;
@@ -86,26 +82,26 @@ namespace uav_commander {
     
     if (currStateGlobal.armed) {
       // DISABLE KALO TEST FLIGHT
-      // if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
-      //   improEnabled.data = true;
-      //   improInfo.impro_enabled = improEnabled;
-      // }
-
-      // if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
-      //   improEnabled.data = false;
-      //   improInfo.impro_enabled = improEnabled;
-      // }
-      // DISABLE KALO TEST FLIGHT
-
-      if (WayReached.wp_seq == 3) {
+      if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
         improEnabled.data = true;
         improInfo.impro_enabled = improEnabled;
       }
 
-      if (WayReached.wp_seq == 4) {
+      if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
         improEnabled.data = false;
         improInfo.impro_enabled = improEnabled;
       }
+      // DISABLE KALO TEST FLIGHT
+
+      // if (WayReached.wp_seq == 3) {
+      //   improEnabled.data = true;
+      //   improInfo.impro_enabled = improEnabled;
+      // }
+
+      // if (WayReached.wp_seq == 4) {
+      //   improEnabled.data = false;
+      //   improInfo.impro_enabled = improEnabled;
+      // }
 
       improInfoPublisher.publish(improInfo);
     }
@@ -115,20 +111,35 @@ namespace uav_commander {
     ros::Rate rate(30.0);
 
     mavros_msgs::CommandLong srv;
-    srv.request.command = 183;	// See https://mavlink.io/en/messages/common.html#MAV_CMD_DO_SET_SERVO
+    srv.request.command = 183;
     srv.request.param1 = 8;
-    srv.request.param2 = 2200;
-
+    srv.request.param2 = 1200;
     bool succeed = commandClient.call(srv);
 
     if (succeed) {
       ROS_INFO("Payload Dropped");
+    } else {
+      ROS_INFO("Not dropped");
     }
 
     ros::spinOnce();
 		rate.sleep();
   }
 
+  // double UAVCommander::haversine(double lat1, double lon1, double lat2, double lon2) {
+  //   double dLat = (lat2 - lat1) * M_PI / 180.0;
+  //   double dLon = (lon2 - lon1) * M_PI / 180.0;
+
+  //   // convert to radians
+  //   lat1 = (lat1) * M_PI / 180.0;
+  //   lat2 = (lat2) * M_PI / 180.0;
+
+  //   // apply formulae
+  //   double a = pow(sin(dLat / 2), 2) + pow(sin(dLon / 2), 2) * cos(lat1) * cos(lat2);
+  //   double rad = 6371;
+  //   double c = 2 * asin(sqrt(a));
+  //   return rad * c;
+  // }
 
 
 

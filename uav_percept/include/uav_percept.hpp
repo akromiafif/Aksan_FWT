@@ -10,6 +10,8 @@
 #include <mavros_msgs/Waypoint.h> 
 #include <mavros_msgs/WaypointPush.h>
 #include <mavros_msgs/VFR_HUD.h> 
+#include <mavros_msgs/CommandLong.h>
+
 #include <sensor_msgs/NavSatFix.h> 
 #include <std_msgs/Float64.h>
 #include <math.h>
@@ -41,6 +43,8 @@ namespace uav_percept {
       ros::Subscriber altSubscriber;
       ros::Subscriber lapInfoSubscriber;
       ros::Subscriber improInfoSubscriber;
+
+      ros::ServiceClient commandClient;
       
       // Save Lat Long variable
       std::ofstream latLongAircraft;
@@ -70,6 +74,8 @@ namespace uav_percept {
       float R = 0; //Earth's radius
       float bearing = 0; //Fixed bearing
       float pi = 3.14159265359;
+      float x_lat;
+      float y_long;
 
       //Variables from Callback
       mavros_msgs::VFR_HUD vfrHUD;
@@ -88,5 +94,8 @@ namespace uav_percept {
       void altCB(const std_msgs::Float64::ConstPtr& msg);
       void lapInfoCB(const uav_commander::lap_info::ConstPtr& msg);
       void improInfoCB(const uav_commander::impro_info::ConstPtr& msg);
+
+      double haversine(double lat1, double lon1, double lat2, double lon2);
+      void dropPayload();
   };
 }

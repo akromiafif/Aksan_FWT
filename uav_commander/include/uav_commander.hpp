@@ -73,5 +73,6 @@ namespace uav_commander {
       void setAirspeed(float airspeed);
 
       void dropPayload();
+      // double haversine(double lat1, double lon1, double lat2, double lon2);
   };
 }

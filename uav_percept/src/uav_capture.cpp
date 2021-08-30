@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 
   sensor_msgs::ImagePtr msg;
 
-  cv::namedWindow(OPENCV_WINDOW, cv::WINDOW_AUTOSIZE );
+  cv::namedWindow(OPENCV_WINDOW, cv::WINDOW_AUTOSIZE);
 
   double fps = capture.get(cv::CAP_PROP_FPS);
   // cv::Size size(
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
     capture >> frame; 
 
     // DISABLE KALO MODE FLIGHT
-    // imshow(OPENCV_WINDOW, frame);
+    imshow(OPENCV_WINDOW, frame);
     writer << frame;
     // DISABLE KALO MODE FLIGHT
 
