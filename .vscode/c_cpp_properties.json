@@ -7,8 +7,11 @@
         "/opt/ros/noetic/include",
         "~/Desktop/Aksan/catkin_fwt/devel/include",
         "~/Desktop/Aksan/catkin_fwt/src/uav_percept/include",
+        "~/Desktop/Aksan/catkin_fwt/src/uav_percept/msg/**",
         "~/Desktop/Aksan/catkin_fwt/src/uav_commander/include",
         "~/Desktop/Aksan/catkin_fwt/src/uav_commander/msg/**",
+        "~/Desktop/Aksan/catkin_fwt/src/uav_payload/include",
+        "~/Desktop/Aksan/catkin_fwt/src/uav_payload/msg/**",
         "/usr/include/**"
       ],
       "defines": [],

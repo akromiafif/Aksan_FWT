@@ -1,7 +1,7 @@
-#include <uav_commander.hpp>
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <uav_commander.hpp>
 #include <uav_commander/lap_info.h>
 #include <uav_commander/impro_info.h>
 
@@ -106,40 +106,6 @@ namespace uav_commander {
       improInfoPublisher.publish(improInfo);
     }
   }
-
-  void UAVCommander::dropPayload() {
-    ros::Rate rate(30.0);
-
-    mavros_msgs::CommandLong srv;
-    srv.request.command = 183;
-    srv.request.param1 = 8;
-    srv.request.param2 = 1200;
-    bool succeed = commandClient.call(srv);
-
-    if (succeed) {
-      ROS_INFO("Payload Dropped");
-    } else {
-      ROS_INFO("Not dropped");
-    }
-
-    ros::spinOnce();
-		rate.sleep();
-  }
-
-  // double UAVCommander::haversine(double lat1, double lon1, double lat2, double lon2) {
-  //   double dLat = (lat2 - lat1) * M_PI / 180.0;
-  //   double dLon = (lon2 - lon1) * M_PI / 180.0;
-
-  //   // convert to radians
-  //   lat1 = (lat1) * M_PI / 180.0;
-  //   lat2 = (lat2) * M_PI / 180.0;
-
-  //   // apply formulae
-  //   double a = pow(sin(dLat / 2), 2) + pow(sin(dLon / 2), 2) * cos(lat1) * cos(lat2);
-  //   double rad = 6371;
-  //   double c = 2 * asin(sqrt(a));
-  //   return rad * c;
-  // }
 
 
 

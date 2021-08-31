@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(uav_percept)
+project(uav_payload)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,17 +8,13 @@ project(uav_percept)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  cv_bridge
-  image_transport
   roscpp
   rospy
-  sensor_msgs
   std_msgs
+  sensor_msgs
   uav_commander
-  message_generation
+  uav_percept
 )
-
-find_package(OpenCV 4.5.3 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -54,10 +50,11 @@ find_package(OpenCV 4.5.3 REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  coordinate_payload.msg
-)
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -77,6 +74,7 @@ add_message_files(
 generate_messages(
   DEPENDENCIES
   std_msgs
+  sensor_msgs
 )
 
 ################################################
@@ -108,12 +106,12 @@ generate_messages(
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
+# catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES uav_percept
-#  CATKIN_DEPENDS other_catkin_pkg
+#  LIBRARIES uav_payload
+#  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
-)
+# )
 
 ###########
 ## Build ##
@@ -124,12 +122,11 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${OpenCV_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/uav_percept.cpp
+#   src/${PROJECT_NAME}/uav_payload.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -140,7 +137,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/uav_percept_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/uav_payload_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -204,7 +201,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_uav_percept.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_uav_payload.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
@@ -212,10 +209,5 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(uav_capture src/uav_capture.cpp)
-target_link_libraries(uav_capture ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-
-add_executable(main_percept src/main_percept.cpp)
-target_link_libraries(main_percept ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-
-add_dependencies(uav_capture ${catkin_EXPORTED_TARGETS})
+add_executable(main_payload src/main_payload.cpp)
+target_link_libraries(main_payload ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
