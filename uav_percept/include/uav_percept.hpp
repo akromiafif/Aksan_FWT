@@ -21,6 +21,7 @@
 #include <uav_commander/lap_info.h>
 #include <uav_commander/impro_info.h>
 
+
 using namespace cv;
 using namespace ros;
 using namespace std;
@@ -44,6 +45,8 @@ namespace uav_percept {
       ros::Subscriber lapInfoSubscriber;
       ros::Subscriber improInfoSubscriber;
 
+      ros::Publisher coordinatePayloadPublisher;
+
       ros::ServiceClient commandClient;
       
       // Save Lat Long variable
@@ -51,8 +54,6 @@ namespace uav_percept {
 
       // Save current aircraft lat, long coordinate
       std::ofstream latLongDroppingZone;
-
-      std::ofstream testWrite;
 
       // Save video variable
       cv::VideoWriter writer;
@@ -74,6 +75,7 @@ namespace uav_percept {
       float R = 0; //Earth's radius
       float bearing = 0; //Fixed bearing
       float pi = 3.14159265359;
+      
       float x_lat;
       float y_long;
 
@@ -94,8 +96,5 @@ namespace uav_percept {
       void altCB(const std_msgs::Float64::ConstPtr& msg);
       void lapInfoCB(const uav_commander::lap_info::ConstPtr& msg);
       void improInfoCB(const uav_commander::impro_info::ConstPtr& msg);
-
-      double haversine(double lat1, double lon1, double lat2, double lon2);
-      void dropPayload();
   };
 }

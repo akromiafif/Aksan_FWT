@@ -7,6 +7,7 @@
 
 // Import header files
 #include <uav_percept.hpp>
+#include <uav_percept/coordinate_payload.h>
 
 using namespace std;
 using namespace cv;
@@ -57,6 +58,9 @@ namespace uav_percept {
     //improInfo Subscriber
     improInfoSubscriber = node->subscribe<uav_commander::impro_info>("/impro_info", 1000, &UAVPercept::improInfoCB, this);
 
+    // Publisher
+    coordinatePayloadPublisher = node->advertise<uav_percept::coordinate_payload>("/coordinate_payload", 1000);
+
     commandClient = node->serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
   }
 
@@ -92,16 +96,6 @@ namespace uav_percept {
       ROS_INFO("Lap 1 Completed");
     }
 
-    if (lapInfo.lap_two.data) {
-      float distance = haversine(GPS.latitude, GPS.longitude, x_lat, y_long) * 1000;
-
-      if (distance <= 11) {
-        dropPayload();
-      }
-      ROS_INFO("Haversine %f", haversine(GPS.latitude, GPS.longitude, x_lat, y_long) * 1000);
-      ROS_INFO("Lap 2 Completed Haversine");
-    }
-
     if (lapInfo.lap_three.data) {
       ROS_INFO("Lap 3 Completed");
     }
@@ -109,8 +103,6 @@ namespace uav_percept {
     if (improInfo.impro_enabled.data) {
 
       latLongAircraft.open("latLongAircraft_" + std::to_string(counter) + std::string(".txt"));
-
-      testWrite.open("testWrite.txt");
 
       try {
         cv_ptr = cv_bridge::toCvCopy(msg, enc::BGR8);
@@ -243,6 +235,13 @@ namespace uav_percept {
           x_lat = (asin(sin(latRef)*cos(d/R) + cos(latRef)*sin(d/R)*cos(bearing))) * (180/pi); //Target Latitude
           y_long = (longRef + atan2(sin(bearing)*sin(d/R)*cos(latRef), cos(d/R) - sin(latRef)*sin(x_lat))) * (180/pi); //Target Longitude
           
+          // Publish dropzone coordinate
+          uav_percept::coordinate_payload coordinatePayload;
+          coordinatePayload.lat_drop.data = x_lat;
+          coordinatePayload.long_drop.data = y_long;
+
+          coordinatePayloadPublisher.publish(coordinatePayload);
+          
           // Display target details deduced
           ROS_INFO("LatDropZone: %f", x_lat); //Target latitude
           ROS_INFO("LongDropZone: %f", y_long); //Target Longitude
@@ -254,9 +253,6 @@ namespace uav_percept {
           ROS_INFO("bearing: %f", bearingDropZone); //Bearing
           ROS_INFO("altitude: %f", altCurrent);
           ROS_INFO("Red circle detected");
-
-          testWrite << "Hello from testWrite" << "\n";
-          testWrite.close();
 
           if (latLongDroppingZone.is_open() || latLongAircraft.is_open()) {
             latLongDroppingZone << "LatDropZone: " + std::to_string(x_lat) + " | LongDropZone: " + std::to_string(y_long) + " \n";
@@ -272,39 +268,5 @@ namespace uav_percept {
         ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
       }
     }
-  }
-
-  double UAVPercept::haversine(double lat1, double lon1, double lat2, double lon2) {
-    double dLat = (lat2 - lat1) * M_PI / 180.0;
-    double dLon = (lon2 - lon1) * M_PI / 180.0;
-
-    // convert to radians
-    lat1 = (lat1) * M_PI / 180.0;
-    lat2 = (lat2) * M_PI / 180.0;
-
-    // apply formulae
-    double a = pow(sin(dLat / 2), 2) + pow(sin(dLon / 2), 2) * cos(lat1) * cos(lat2);
-    double rad = 6371;
-    double c = 2 * asin(sqrt(a));
-    return rad * c;
-  }
-
-  void UAVPercept::dropPayload() {
-    ros::Rate rate(30.0);
-
-    mavros_msgs::CommandLong srv;
-    srv.request.command = 183;
-    srv.request.param1 = 8;
-    srv.request.param2 = 1200;
-    bool succeed = commandClient.call(srv);
-
-    if (succeed) {
-      ROS_INFO("Payload Dropped");
-    } else {
-      ROS_INFO("Not dropped");
-    }
-
-    ros::spinOnce();
-		rate.sleep();
   }
 }
