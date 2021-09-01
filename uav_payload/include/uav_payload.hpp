@@ -43,6 +43,7 @@ namespace uav_payload {
       // Callback function for lap and impro status
       void lapInfoCB(const uav_commander::lap_info::ConstPtr& msg);
       void improInfoCB(const uav_commander::impro_info::ConstPtr& msg);
+      void dropZoneCB(const uav_percept::coordinate_payload::ConstPtr& msg);
 
       // Payload calculation function
       bool isDropInRange(double lat1, double lon1, double lat2, double lon2, int range);

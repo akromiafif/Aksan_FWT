@@ -10,8 +10,17 @@
 
 namespace uav_payload {
   UAVPayload::UAVPayload(ros::NodeHandle* node) {
-    //GPS Subscriber
+    //  GPS Subscriber
     nsfSubscriber = node->subscribe<sensor_msgs::NavSatFix>("/mavros/global_position/global", 1000, &UAVPayload::nsfCB, this);
+
+    // DropZone coordinate
+    coordinatePayloadSubscriber = node->subscribe<uav_percept::coordinate_payload>("/coordinate_payload", 1000, &UAVPayload::dropZoneCB, this);
+
+    //LapInfo Subscriber
+    lapInfoSubscriber = node->subscribe<uav_commander::lap_info>("/lap_info", 1000, &UAVPayload::lapInfoCB, this);
+
+    //improInfo Subscriber
+    improInfoSubscriber = node->subscribe<uav_commander::impro_info>("/impro_info", 1000, &UAVPayload::improInfoCB, this);
   }
 
   UAVPayload::~UAVPayload() {}
@@ -26,6 +35,10 @@ namespace uav_payload {
 
   void UAVPayload::improInfoCB(const uav_commander::impro_info::ConstPtr& msg) {
     ImproInfo = *msg;
+  }
+
+  void UAVPayload::dropZoneCB(const uav_percept::coordinate_payload::ConstPtr& msg) {
+    coordinatePayload = *msg;
   }
 
   bool UAVPayload::isDropInRange(double lat1, double lon1, double lat2, double lon2, int range) {
@@ -54,8 +67,8 @@ namespace uav_payload {
 
     mavros_msgs::CommandLong srv;
     srv.request.command = 183;
-    srv.request.param1 = channel;
-    srv.request.param2 = pwm;
+    srv.request.param1 = 8;
+    srv.request.param2 = 2200;
     bool succeed = commandClient.call(srv);
 
     if (succeed) {
@@ -74,7 +87,11 @@ namespace uav_payload {
 
     if (isImproEnabled) {
       if (isLapTwo) {
-        bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, 40.1, 40.2, 11);
+        bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 11);
+
+        if (isInRange) {
+          doServoMove(8, 2200);
+        }
       }
     }
   }

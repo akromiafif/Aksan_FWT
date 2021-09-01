@@ -1,0 +1,8 @@
+<launch>
+  <node
+    pkg="uav_payload"
+    type="main_payload"
+    name="main_payload"
+    output="screen"
+  />
+</launch>
