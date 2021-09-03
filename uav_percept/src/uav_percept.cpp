@@ -182,7 +182,7 @@ namespace uav_percept {
         }
 
         // DISABLE KALO MODE FLIGHT
-        cv::imshow(OPENCV_WINDOW, orig_image);
+        // cv::imshow(OPENCV_WINDOW, orig_image);
         // DISABLE KALO MODE FLIGHT
 
         writer << orig_image;

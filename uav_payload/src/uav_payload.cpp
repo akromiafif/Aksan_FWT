@@ -21,6 +21,8 @@ namespace uav_payload {
 
     //improInfo Subscriber
     improInfoSubscriber = node->subscribe<uav_commander::impro_info>("/impro_info", 1000, &UAVPayload::improInfoCB, this);
+
+    commandClient = node->serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
   }
 
   UAVPayload::~UAVPayload() {}
@@ -67,8 +69,8 @@ namespace uav_payload {
 
     mavros_msgs::CommandLong srv;
     srv.request.command = 183;
-    srv.request.param1 = 8;
-    srv.request.param2 = 2200;
+    srv.request.param1 = channel;
+    srv.request.param2 = pwm;
     bool succeed = commandClient.call(srv);
 
     if (succeed) {
@@ -90,6 +92,8 @@ namespace uav_payload {
         bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 11);
 
         if (isInRange) {
+          doServoMove(8, 1200);
+          sleep(1);
           doServoMove(8, 2200);
         }
       }

@@ -6,7 +6,7 @@
     output="screen"
   />
   
-  <!-- <arg name="fcu_url" default="/dev/ttyACM0:115200" />
+  <arg name="fcu_url" default="/dev/ttyACM0:115200" />
 	<arg name="gcs_url" default="" />
 	<arg name="tgt_system" default="1" />
 	<arg name="tgt_component" default="1" />
@@ -25,5 +25,5 @@
 		<arg name="log_output" value="$(arg log_output)" />
 		<arg name="fcu_protocol" value="$(arg fcu_protocol)" />
 		<arg name="respawn_mavros" value="$(arg respawn_mavros)" />
-	</include> -->
+	</include>
 </launch>
