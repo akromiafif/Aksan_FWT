@@ -82,26 +82,26 @@ namespace uav_commander {
     
     if (currStateGlobal.armed) {
       // DISABLE KALO TEST FLIGHT
-      if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
-        improEnabled.data = true;
-        improInfo.impro_enabled = improEnabled;
-      }
-
-      if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
-        improEnabled.data = false;
-        improInfo.impro_enabled = improEnabled;
-      }
-      // DISABLE KALO TEST FLIGHT
-
-      // if (WayReached.wp_seq == 3) {
+      // if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
       //   improEnabled.data = true;
       //   improInfo.impro_enabled = improEnabled;
       // }
 
-      // if (WayReached.wp_seq == 4) {
+      // if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
       //   improEnabled.data = false;
       //   improInfo.impro_enabled = improEnabled;
       // }
+      // DISABLE KALO TEST FLIGHT
+
+      if (WayReached.wp_seq == 3) {
+        improEnabled.data = true;
+        improInfo.impro_enabled = improEnabled;
+      }
+
+      if (WayReached.wp_seq == 4) {
+        improEnabled.data = false;
+        improInfo.impro_enabled = improEnabled;
+      }
 
       improInfoPublisher.publish(improInfo);
     }

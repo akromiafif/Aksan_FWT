@@ -92,13 +92,13 @@ namespace uav_percept {
   void UAVPercept::improCB(const sensor_msgs::ImageConstPtr& msg) {
     cv_bridge::CvImagePtr cv_ptr;
 
-    if (lapInfo.lap_one.data) {
-      ROS_INFO("Lap 1 Completed");
-    }
+    // if (lapInfo.lap_one.data) {
+    //   ROS_INFO("Lap 1 Completed");
+    // }
 
-    if (lapInfo.lap_three.data) {
-      ROS_INFO("Lap 3 Completed");
-    }
+    // if (lapInfo.lap_three.data) {
+    //   ROS_INFO("Lap 3 Completed");
+    // }
 
     if (improInfo.impro_enabled.data) {
 
