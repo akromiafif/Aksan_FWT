@@ -96,9 +96,27 @@ namespace uav_percept {
     //   ROS_INFO("Lap 1 Completed");
     // }
 
+    // if (lapInfo.lap_two.data) {
+    //   ROS_INFO("Lap 2 Completed");
+    // }
+
     // if (lapInfo.lap_three.data) {
     //   ROS_INFO("Lap 3 Completed");
     // }
+
+    if (lapInfo.lap_two.data) {
+      int midIndex = matDropZone.size() - 2;
+
+      ROS_INFO("LatitudeArr: %f", matDropZone.at(midIndex).latitude);
+      ROS_INFO("longitudeArr: %f", matDropZone.at(midIndex).longitude);
+
+      uav_percept::coordinate_payload coordinatePayload;
+      coordinatePayload.lat_drop.data = matDropZone.at(midIndex).latitude;
+      coordinatePayload.long_drop.data = matDropZone.at(midIndex).longitude;
+
+      coordinatePayloadPublisher.publish(coordinatePayload);
+    }
+
 
     if (improInfo.impro_enabled.data) {
 
@@ -182,7 +200,7 @@ namespace uav_percept {
         }
 
         // DISABLE KALO MODE FLIGHT
-        // cv::imshow(OPENCV_WINDOW, orig_image);
+        cv::imshow(OPENCV_WINDOW, orig_image);
         // DISABLE KALO MODE FLIGHT
 
         writer << orig_image;
@@ -234,18 +252,20 @@ namespace uav_percept {
 
           x_lat = (asin(sin(latRef)*cos(d/R) + cos(latRef)*sin(d/R)*cos(bearing))) * (180/pi); //Target Latitude
           y_long = (longRef + atan2(sin(bearing)*sin(d/R)*cos(latRef), cos(d/R) - sin(latRef)*sin(x_lat))) * (180/pi); //Target Longitude
-          
-          // Publish dropzone coordinate
-          uav_percept::coordinate_payload coordinatePayload;
-          coordinatePayload.lat_drop.data = x_lat;
-          coordinatePayload.long_drop.data = y_long;
 
-          coordinatePayloadPublisher.publish(coordinatePayload);
+          // // Publish dropzone coordinate
+          // uav_percept::coordinate_payload coordinatePayload;
+          // coordinatePayload.lat_drop.data = x_lat;
+          // coordinatePayload.long_drop.data = y_long;
+
+          // coordinatePayloadPublisher.publish(coordinatePayload);
+
+          matDropZone.push_back({GPS.latitude, GPS.longitude});
           
           // Display target details deduced
           ROS_INFO("LatDropZone: %f", x_lat); //Target latitude
           ROS_INFO("LongDropZone: %f", y_long); //Target Longitude
-          ROS_INFO("LatAircraft: %f", GPS.altitude); //Reference latitude
+          ROS_INFO("LatAircraft: %f", GPS.latitude); //Reference latitude
           ROS_INFO("LongAircraft: %f", GPS.longitude); //Reference longitude
           ROS_INFO("xm: %f", xm); //X axis displacement (km)
           ROS_INFO("ym: %f", ym); //Y axis displacment (km)

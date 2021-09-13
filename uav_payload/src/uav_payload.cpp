@@ -86,6 +86,7 @@ namespace uav_payload {
   void UAVPayload::doDropPayload() {
     bool isImproEnabled = ImproInfo.impro_enabled.data;
     bool isLapTwo = LapInfo.lap_two.data;
+    bool isLapThree = LapInfo.lap_three.data;
 
     if (isImproEnabled) {
       if (isLapTwo) {
@@ -93,8 +94,18 @@ namespace uav_payload {
 
         if (isInRange) {
           doServoMove(8, 1200);
-          sleep(1);
+          sleep(3);
           doServoMove(8, 2200);
+        }
+      }
+
+      if (isLapThree) {
+        bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 11);
+
+        if (isInRange) {
+          doServoMove(9, 1200);
+          sleep(3);
+          doServoMove(9, 2200);
         }
       }
     }

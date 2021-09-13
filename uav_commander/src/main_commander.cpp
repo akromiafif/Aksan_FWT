@@ -17,9 +17,9 @@ int main(int argc, char** argv) {
 	}
 
 	// DISABLE KALO TEST FLIGHT
-	// uavCommander.setAutoMissionMode();
-	// uavCommander.setAirspeed(20.0);
-	// uavCommander.setArm();
+	uavCommander.setAutoMissionMode();
+	uavCommander.setAirspeed(20.0);
+	uavCommander.setArm();
 	// DISABLE KALO TEST FLIGHT
 
 	// uavCommander.dropPayload();

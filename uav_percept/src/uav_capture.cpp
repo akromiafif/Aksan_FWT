@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
     capture >> frame; 
 
     // DISABLE KALO MODE FLIGHT
-    // imshow(OPENCV_WINDOW, frame);
+    imshow(OPENCV_WINDOW, frame);
     writer << frame;
     // DISABLE KALO MODE FLIGHT
 
