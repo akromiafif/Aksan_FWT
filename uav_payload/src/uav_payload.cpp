@@ -90,7 +90,7 @@ namespace uav_payload {
 
     if (isImproEnabled) {
       if (isLapTwo) {
-        bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 11);
+        bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 17.09);
 
         if (isInRange) {
           doServoMove(8, 1250);
@@ -100,7 +100,7 @@ namespace uav_payload {
       }
 
       if (isLapThree) {
-        bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 11);
+        bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 17.09);
 
         if (isInRange) {
           doServoMove(9, 1250);
