@@ -93,7 +93,7 @@ namespace uav_payload {
         bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 11);
 
         if (isInRange) {
-          doServoMove(8, 1200);
+          doServoMove(8, 1250);
           sleep(3);
           doServoMove(8, 2200);
         }
@@ -103,7 +103,7 @@ namespace uav_payload {
         bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 11);
 
         if (isInRange) {
-          doServoMove(9, 1200);
+          doServoMove(9, 1250);
           sleep(3);
           doServoMove(9, 2200);
         }

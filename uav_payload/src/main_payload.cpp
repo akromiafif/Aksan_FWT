@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
     ros::spinOnce();
 		rate.sleep();
   }
-
+  
   ros::spin();
 	return 0;
 }

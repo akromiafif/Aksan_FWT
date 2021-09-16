@@ -171,7 +171,7 @@ namespace uav_percept {
 
         //HOUGH CIRCLE TRANSFORNATION
         cv::HoughCircles(hue_image, circles, CV_HOUGH_GRADIENT, 1, hue_image.rows/4, 100, 25, 25, 100); 
-        // imshow("Original", orig_image);
+        // cv::imshow("Original", orig_image);
         // CUSTOM FOR RED RANGE //
 
         // ============== CUSTOM FOR PINK RANGE ============== //
