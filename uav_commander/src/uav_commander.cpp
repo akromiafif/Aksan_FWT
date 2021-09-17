@@ -27,11 +27,11 @@ namespace uav_commander {
 
     //Services and Clients (Allows for functions to be defined and called, returning a booleean result as to the clients success at executing the service
     //Two members: request and response
-    armingClient = node->serviceClient<mavros_msgs::CommandBool>("/mavros/cmd/arming");
-    landClient = node->serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/land");
-    setModeClient = node->serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
-    takeoffClient = node->serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
-    commandClient = node->serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
+    // armingClient = node->serviceClient<mavros_msgs::CommandBool>("/mavros/cmd/arming");
+    // landClient = node->serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/land");
+    // setModeClient = node->serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
+    // takeoffClient = node->serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
+    // commandClient = node->serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
 
     ROS_INFO("======= UAVCommander Initialize Completed =======" );
     ROS_INFO("                                                 " );
@@ -124,65 +124,65 @@ namespace uav_commander {
 
 
   //Set aircraft to AUTO mode
-  void UAVCommander::setAutoMissionMode() {
-    ROS_INFO(" ===== Auto Mission Mode ===== ");
+  // void UAVCommander::setAutoMissionMode() {
+  //   ROS_INFO(" ===== Auto Mission Mode ===== ");
 
-    mavros_msgs::SetMode srv_setMode;
-    mavros_msgs::SetMode::Request request;
-    mavros_msgs::SetMode::Response response;
+  //   mavros_msgs::SetMode srv_setMode;
+  //   mavros_msgs::SetMode::Request request;
+  //   mavros_msgs::SetMode::Response response;
 
-    request.base_mode = 0;
-    std::string mode = "AUTO.MISSION";
-    request.custom_mode = mode.c_str();
+  //   request.base_mode = 0;
+  //   std::string mode = "AUTO.MISSION";
+  //   request.custom_mode = mode.c_str();
 
-    bool success = setModeClient.call(request, response);
+  //   bool success = setModeClient.call(request, response);
 
-    if(success){
-      ROS_INFO("Auto Mission ON");
-    } else{ 
-      ROS_ERROR("Failed to Auto Mission");
-    }
-    ROS_INFO(" ===== Auto Mission Completed ===== ");
+  //   if(success){
+  //     ROS_INFO("Auto Mission ON");
+  //   } else{ 
+  //     ROS_ERROR("Failed to Auto Mission");
+  //   }
+  //   ROS_INFO(" ===== Auto Mission Completed ===== ");
 
-    ROS_INFO(" ===== Auto Mission Mode Completed ===== ");
-    ROS_INFO("                                         ");
-  }
+  //   ROS_INFO(" ===== Auto Mission Mode Completed ===== ");
+  //   ROS_INFO("                                         ");
+  // }
 
-  //Define flight linear velocity
-  void UAVCommander::setAirspeed(float airspeed) {
-    ROS_INFO(" ===== Set Airspeed ===== ");
+  // //Define flight linear velocity
+  // void UAVCommander::setAirspeed(float airspeed) {
+  //   ROS_INFO(" ===== Set Airspeed ===== ");
 
-    geometry_msgs::Twist velocity;
-    velocity.linear.x = airspeed;
-    localVelPublisher.publish(velocity);
+  //   geometry_msgs::Twist velocity;
+  //   velocity.linear.x = airspeed;
+  //   localVelPublisher.publish(velocity);
   
-    ROS_INFO(" ===== Set Airspeed Completed ===== ");
-  }
+  //   ROS_INFO(" ===== Set Airspeed Completed ===== ");
+  // }
 
-  //Arming the aircraft
-  void UAVCommander::setArm() {
-    ROS_INFO(" ===== Arming UAV ===== ");
+  // //Arming the aircraft
+  // void UAVCommander::setArm() {
+  //   ROS_INFO(" ===== Arming UAV ===== ");
 
-    mavros_msgs::CommandBool srv_arm;
-    mavros_msgs::CommandBool::Request request;
-    mavros_msgs::CommandBool::Response response;
+  //   mavros_msgs::CommandBool srv_arm;
+  //   mavros_msgs::CommandBool::Request request;
+  //   mavros_msgs::CommandBool::Response response;
 
-    request.value = true;
-    bool success = false;
+  //   request.value = true;
+  //   bool success = false;
 
-    while (!currStateGlobal.armed && !response.success && ros::ok()) {
-      ros::Duration(.1).sleep();
+  //   while (!currStateGlobal.armed && !response.success && ros::ok()) {
+  //     ros::Duration(.1).sleep();
 
-      success = armingClient.call(request, response);
-    }
+  //     success = armingClient.call(request, response);
+  //   }
 
-    if(success) {
-      ROS_INFO("Arming ON");	
-    } else {
-      ROS_INFO("Arming failed with %d", response.success);
-    }
+  //   if(success) {
+  //     ROS_INFO("Arming ON");	
+  //   } else {
+  //     ROS_INFO("Arming failed with %d", response.success);
+  //   }
 
-    ROS_INFO(" ===== Arming Completed ===== ");
-    ROS_INFO("                              ");
-  }
+  //   ROS_INFO(" ===== Arming Completed ===== ");
+  //   ROS_INFO("                              ");
+  // }
 }
