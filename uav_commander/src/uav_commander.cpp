@@ -86,12 +86,12 @@ namespace uav_commander {
     
     if (currStateGlobal.armed) {
       // DISABLE KALO TEST FLIGHT
-      if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
+      if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
         improEnabled.data = true;
         improInfo.impro_enabled = improEnabled;
       }
 
-      if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
+      if (WayReached.wp_seq == 3 || WayReached.wp_seq == 7 || WayReached.wp_seq == 11) {
         improEnabled.data = false;
         improInfo.impro_enabled = improEnabled;
       }
