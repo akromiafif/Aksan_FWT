@@ -4,6 +4,8 @@
 #include <string>
 #include <fstream>
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
 
 // import header file
 #include <uav_payload.hpp>
@@ -74,9 +76,9 @@ namespace uav_payload {
     bool succeed = commandClient.call(srv);
 
     if (succeed) {
-      ROS_INFO("Payload Dropped");
+      ROS_INFO("Servo successfully to move");
     } else {
-      ROS_INFO("Payload not dropped");
+      ROS_INFO("Servo failed to move");
     }
 
     ros::spinOnce();
@@ -90,22 +92,60 @@ namespace uav_payload {
 
     if (isImproEnabled) {
       if (isLapTwo) {
-        bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 17.09);
+        float coordinateLat = coordinatePayload.lat_drop.data;
+        float coordinateLon = coordinatePayload.long_drop.data;
 
-        if (isInRange) {
-          doServoMove(8, 1250);
-          sleep(3);
-          doServoMove(8, 2200);
+        if (coordinateLat == 0.0 && coordinateLon == 0.0) {
+          srand(time(0));
+          if ( (rand() % 1000 + 1) > 500) {
+            ROS_INFO("Random %d: ", rand() % 1000 + 1);
+            sleep(5);
+            doServoMove(8, 1250);
+            ROS_INFO("PDM Open");
+            sleep(3);
+            doServoMove(8, 2200);
+            ROS_INFO("PDM Close");
+          }
+
+        } else {
+          bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 17.09);
+
+          if (isInRange) {
+            doServoMove(8, 1250);
+            ROS_INFO("PDM Open");
+            sleep(3);
+            doServoMove(8, 2200);
+            ROS_INFO("PDM Close");
+          }
         }
       }
 
       if (isLapThree) {
-        bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 17.09);
+        float coordinateLat = coordinatePayload.lat_drop.data;
+        float coordinateLon = coordinatePayload.long_drop.data;
 
-        if (isInRange) {
-          doServoMove(9, 1250);
-          sleep(3);
-          doServoMove(9, 2200);
+        if (coordinateLat == 0.0 && coordinateLon == 0.0) {
+          srand(time(0));
+          if ( (rand() % 1000 + 1) > 500) {
+            ROS_INFO("Random %d: ", rand() % 1000 + 1);
+            sleep(5);
+            doServoMove(9, 1250);
+            ROS_INFO("PDM Open");
+            sleep(3);
+            doServoMove(9, 2200);
+            ROS_INFO("PDM Close");
+          }
+
+        } else {
+          bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 17.09);
+
+          if (isInRange) {
+            doServoMove(9, 1250);
+            ROS_INFO("PDM Open");
+            sleep(3);
+            doServoMove(9, 2200);
+            ROS_INFO("PDM Close");
+          }
         }
       }
     }

@@ -104,17 +104,28 @@ namespace uav_percept {
     //   ROS_INFO("Lap 3 Completed");
     // }
 
-    if (lapInfo.lap_two.data) {
-      int midIndex = matDropZone.size() - 2;
+    if (lapInfo.lap_two.data || lapInfo.lap_three.data) {
+      if (matDropZone.size() > 0) {
+        int midIndex = 0;
+        if (matDropZone.size() > 2) {
+          midIndex = matDropZone.size() - 2;
+        }
 
-      ROS_INFO("LatitudeArr: %f", matDropZone.at(midIndex).latitude);
-      ROS_INFO("longitudeArr: %f", matDropZone.at(midIndex).longitude);
+        ROS_INFO("LatitudeArr: %f", matDropZone.at(midIndex).latitude);
+        ROS_INFO("longitudeArr: %f", matDropZone.at(midIndex).longitude);
 
-      uav_percept::coordinate_payload coordinatePayload;
-      coordinatePayload.lat_drop.data = matDropZone.at(midIndex).latitude;
-      coordinatePayload.long_drop.data = matDropZone.at(midIndex).longitude;
+        uav_percept::coordinate_payload coordinatePayload;
+        coordinatePayload.lat_drop.data = matDropZone.at(midIndex).latitude;
+        coordinatePayload.long_drop.data = matDropZone.at(midIndex).longitude;
 
-      coordinatePayloadPublisher.publish(coordinatePayload);
+        coordinatePayloadPublisher.publish(coordinatePayload);
+      } else {
+        uav_percept::coordinate_payload coordinatePayload;
+        coordinatePayload.lat_drop.data = 0.0;
+        coordinatePayload.long_drop.data = 0.0;
+
+        coordinatePayloadPublisher.publish(coordinatePayload);
+      }
     }
 
 
@@ -200,7 +211,7 @@ namespace uav_percept {
         }
 
         // DISABLE KALO MODE FLIGHT
-        // cv::imshow(OPENCV_WINDOW, orig_image);
+        cv::imshow(OPENCV_WINDOW, orig_image);
         // DISABLE KALO MODE FLIGHT
 
         writer << orig_image;

@@ -9,7 +9,7 @@
 
 //MAVROS Message Types
 #include <mavros_msgs/OverrideRCIn.h> //Payload release
-// #include <mavros_msgs/SetMode.h> //Define aircraft flightmode
+#include <mavros_msgs/SetMode.h> //Define aircraft flightmode
 #include <mavros_msgs/State.h> //Current autopilot state
 #include <mavros_msgs/VFR_HUD.h> //Telemetry
 #include <mavros_msgs/Waypoint.h> //Waypoint header
@@ -18,9 +18,9 @@
 #include <mavros_msgs/WaypointReached.h> //Confirmation on reaching waypoint
 
 //MAVROS Service Types
-// #include <mavros_msgs/CommandBool.h> //Arming statement
-// #include <mavros_msgs/CommandTOL.h> //Takeoff and Landing
-// #include <mavros_msgs/CommandLong.h>
+#include <mavros_msgs/CommandBool.h> //Arming statement
+#include <mavros_msgs/CommandTOL.h> //Takeoff and Landing
+#include <mavros_msgs/CommandLong.h>
 #include <mavros_msgs/WaypointPull.h> //Request waypoints from FCU
 #include <mavros_msgs/WaypointPush.h> //Send waypoints to FCU
 #include <mavros_msgs/WaypointSetCurrent.h> //Define a waypoint for the aircraft to fly to (Provide index)
@@ -38,11 +38,11 @@ namespace uav_commander {
       ros::Subscriber waypointReachSubscriber;
       ros::Subscriber vfrSubscriber;
       
-      // ros::ServiceClient armingClient;
-      // ros::ServiceClient landClient;
-      // ros::ServiceClient setModeClient;
-      // ros::ServiceClient takeoffClient;
-      // ros::ServiceClient commandClient;
+      ros::ServiceClient armingClient;
+      ros::ServiceClient landClient;
+      ros::ServiceClient setModeClient;
+      ros::ServiceClient takeoffClient;
+      ros::ServiceClient commandClient;
       ros::ServiceClient waypointClearClient;
 
       mavros_msgs::State currStateGlobal;

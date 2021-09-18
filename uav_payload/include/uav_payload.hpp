@@ -1,5 +1,6 @@
 #include <ros/ros.h>
 #include <std_msgs/String.h> 
+#include <stdlib.h>     
 
 // For dropping payload
 #include <mavros_msgs/CommandLong.h>

@@ -12,6 +12,7 @@
   "files.associations": {
     "iosfwd": "cpp",
     "cmath": "cpp",
-    "complex": "cpp"
+    "complex": "cpp",
+    "cstdlib": "cpp"
   }
 }
