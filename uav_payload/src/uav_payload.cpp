@@ -99,7 +99,7 @@ namespace uav_payload {
           srand(time(0));
           if ( (rand() % 1000 + 1) > 500) {
             ROS_INFO("Random %d: ", rand() % 1000 + 1);
-            sleep(2);
+            sleep(1);
             doServoMove(8, 1250);
             ROS_INFO("PDM Open");
             sleep(3);
@@ -128,7 +128,7 @@ namespace uav_payload {
           srand(time(0));
           if ( (rand() % 1000 + 1) > 500) {
             ROS_INFO("Random %d: ", rand() % 1000 + 1);
-            sleep(2);
+            sleep(1);
             doServoMove(9, 1250);
             ROS_INFO("PDM Open");
             sleep(3);
