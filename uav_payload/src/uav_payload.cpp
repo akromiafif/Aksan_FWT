@@ -108,7 +108,7 @@ namespace uav_payload {
           }
 
         } else {
-          bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 17.09);
+          bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 19.68);
 
           if (isInRange) {
             doServoMove(8, 1250);
@@ -137,7 +137,7 @@ namespace uav_payload {
           }
 
         } else {
-          bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 17.09);
+          bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 19.68);
 
           if (isInRange) {
             doServoMove(9, 1250);
