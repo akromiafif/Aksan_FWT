@@ -4,14 +4,27 @@
 #include <string>
 #include <fstream>
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
 
 // import header file
 #include <uav_payload.hpp>
 
 namespace uav_payload {
   UAVPayload::UAVPayload(ros::NodeHandle* node) {
-    //GPS Subscriber
+    //  GPS Subscriber
     nsfSubscriber = node->subscribe<sensor_msgs::NavSatFix>("/mavros/global_position/global", 1000, &UAVPayload::nsfCB, this);
+
+    // DropZone coordinate
+    coordinatePayloadSubscriber = node->subscribe<uav_percept::coordinate_payload>("/coordinate_payload", 1000, &UAVPayload::dropZoneCB, this);
+
+    //LapInfo Subscriber
+    lapInfoSubscriber = node->subscribe<uav_commander::lap_info>("/lap_info", 1000, &UAVPayload::lapInfoCB, this);
+
+    //improInfo Subscriber
+    improInfoSubscriber = node->subscribe<uav_commander::impro_info>("/impro_info", 1000, &UAVPayload::improInfoCB, this);
+
+    commandClient = node->serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
   }
 
   UAVPayload::~UAVPayload() {}
@@ -26,6 +39,10 @@ namespace uav_payload {
 
   void UAVPayload::improInfoCB(const uav_commander::impro_info::ConstPtr& msg) {
     ImproInfo = *msg;
+  }
+
+  void UAVPayload::dropZoneCB(const uav_percept::coordinate_payload::ConstPtr& msg) {
+    coordinatePayload = *msg;
   }
 
   bool UAVPayload::isDropInRange(double lat1, double lon1, double lat2, double lon2, int range) {
@@ -59,9 +76,9 @@ namespace uav_payload {
     bool succeed = commandClient.call(srv);
 
     if (succeed) {
-      ROS_INFO("Payload Dropped");
+      ROS_INFO("Servo successfully to move");
     } else {
-      ROS_INFO("Payload not dropped");
+      ROS_INFO("Servo failed to move");
     }
 
     ros::spinOnce();
@@ -71,10 +88,65 @@ namespace uav_payload {
   void UAVPayload::doDropPayload() {
     bool isImproEnabled = ImproInfo.impro_enabled.data;
     bool isLapTwo = LapInfo.lap_two.data;
+    bool isLapThree = LapInfo.lap_three.data;
 
     if (isImproEnabled) {
       if (isLapTwo) {
-        bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, 40.1, 40.2, 11);
+        float coordinateLat = coordinatePayload.lat_drop.data;
+        float coordinateLon = coordinatePayload.long_drop.data;
+
+        if (coordinateLat == 0.0 && coordinateLon == 0.0) {
+          srand(time(0));
+          if ( (rand() % 1000 + 1) > 500) {
+            ROS_INFO("Random %d: ", rand() % 1000 + 1);
+            sleep(1);
+            doServoMove(8, 1250);
+            ROS_INFO("PDM Open");
+            sleep(3);
+            doServoMove(8, 2200);
+            ROS_INFO("PDM Close");
+          }
+
+        } else {
+          bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 19.68);
+
+          if (isInRange) {
+            doServoMove(8, 1250);
+            ROS_INFO("PDM Open");
+            sleep(3);
+            doServoMove(8, 2200);
+            ROS_INFO("PDM Close");
+          }
+        }
+      }
+
+      if (isLapThree) {
+        float coordinateLat = coordinatePayload.lat_drop.data;
+        float coordinateLon = coordinatePayload.long_drop.data;
+
+        if (coordinateLat == 0.0 && coordinateLon == 0.0) {
+          srand(time(0));
+          if ( (rand() % 1000 + 1) > 500) {
+            ROS_INFO("Random %d: ", rand() % 1000 + 1);
+            sleep(1);
+            doServoMove(9, 1250);
+            ROS_INFO("PDM Open");
+            sleep(3);
+            doServoMove(9, 2200);
+            ROS_INFO("PDM Close");
+          }
+
+        } else {
+          bool isInRange = isDropInRange(GPS.latitude, GPS.longitude, coordinatePayload.lat_drop.data, coordinatePayload.long_drop.data, 19.68);
+
+          if (isInRange) {
+            doServoMove(9, 1250);
+            ROS_INFO("PDM Open");
+            sleep(3);
+            doServoMove(9, 2200);
+            ROS_INFO("PDM Close");
+          }
+        }
       }
     }
   }

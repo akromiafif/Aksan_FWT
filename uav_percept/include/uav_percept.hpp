@@ -1,5 +1,7 @@
 #include <ros/ros.h>
 
+#include <iostream>
+
 // For OpenCV purpose
 #include <image_transport/image_transport.h> 
 #include <opencv2/highgui/highgui.hpp>
@@ -35,6 +37,9 @@ namespace uav_percept {
   // Topics
   static const std::string IMAGE_TOPIC = "/camera/image";
 
+  struct Matrix {
+    double latitude, longitude;
+  };
 
   class UAVPercept {
     public: 
@@ -78,6 +83,8 @@ namespace uav_percept {
       
       float x_lat;
       float y_long;
+
+      vector<Matrix> matDropZone;
 
       //Variables from Callback
       mavros_msgs::VFR_HUD vfrHUD;

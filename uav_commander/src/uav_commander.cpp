@@ -18,11 +18,15 @@ namespace uav_commander {
 
     //Subscribers (Listens for information from FCU)
     stateSubscriber = node->subscribe<mavros_msgs::State>("/mavros/state", 1000, &UAVCommander::stateCB, this);
-    waypointReachSubscriber = node->subscribe<mavros_msgs::WaypointReached>("/mavros/mission/reached", 1000, &UAVCommander::waypointReachedCB, this); // Listens for whether the aircraft reached the desired waypoint
-    vfrSubscriber = node->subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 1000, &UAVCommander::vfrCB, this); //Listens for aircraft variables
 
-    //Services and Clients (Allows for functions to be defined and called, returning a booleean result as to the clients success at executing the service
-    //Two members: request and response
+    // Listens for whether the aircraft reached the desired waypoint
+    waypointReachSubscriber = node->subscribe<mavros_msgs::WaypointReached>("/mavros/mission/reached", 1000, &UAVCommander::waypointReachedCB, this); 
+
+    //Listens for aircraft variables
+    vfrSubscriber = node->subscribe<mavros_msgs::VFR_HUD>("/mavros/vfr_hud", 1000, &UAVCommander::vfrCB, this); 
+
+    // Services and Clients (Allows for functions to be defined and called, returning a booleean result as to the clients success at executing the service
+    // Two members: request and response
     armingClient = node->serviceClient<mavros_msgs::CommandBool>("/mavros/cmd/arming");
     landClient = node->serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/land");
     setModeClient = node->serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
@@ -82,12 +86,12 @@ namespace uav_commander {
     
     if (currStateGlobal.armed) {
       // DISABLE KALO TEST FLIGHT
-      if (WayReached.wp_seq == 1 || WayReached.wp_seq == 5 || WayReached.wp_seq == 9) {
+      if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
         improEnabled.data = true;
         improInfo.impro_enabled = improEnabled;
       }
 
-      if (WayReached.wp_seq == 2 || WayReached.wp_seq == 6 || WayReached.wp_seq == 10) {
+      if (WayReached.wp_seq == 3 || WayReached.wp_seq == 7 || WayReached.wp_seq == 11) {
         improEnabled.data = false;
         improInfo.impro_enabled = improEnabled;
       }

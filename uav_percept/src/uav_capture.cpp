@@ -27,9 +27,9 @@ int main(int argc, char** argv) {
   image_transport::ImageTransport it(node); 
   image_transport::Publisher itPublisher = it.advertise(IMAGE_TOPIC, 1);
 
-  // GANTI INDEX KE 0 KALO MODE FLIGHT
-  cv::VideoCapture capture(0, cv::CAP_V4L2);
-  // GANTI INDEX KE 0 KALO MODE FLIGHT
+  // GANTI INDEX KE 8 KALO MODE FLIGHT
+  cv::VideoCapture capture(8, cv::CAP_V4L2);
+  // GANTI INDEX KE 8 KALO MODE FLIGHT
 
   capture.set(cv::CAP_PROP_FRAME_WIDTH, 640);
   capture.set(cv::CAP_PROP_FRAME_HEIGHT, 360);
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
     capture >> frame; 
 
     // DISABLE KALO MODE FLIGHT
-    imshow(OPENCV_WINDOW, frame);
+    // cv::imshow(OPENCV_WINDOW, frame);
     writer << frame;
     // DISABLE KALO MODE FLIGHT
 
